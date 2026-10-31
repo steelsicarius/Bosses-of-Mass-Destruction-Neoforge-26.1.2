@@ -30,7 +30,7 @@ public class GauntletBlackstoneBlock extends Block {
 
     @Override
     public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
-        if (level.isClientSide) return state;
+        if (level.isClientSide()) return state;
 
         for (Direction dir : List.of(Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH)){
             BlockPos centerPos = pos.offset(dir.getNormal());

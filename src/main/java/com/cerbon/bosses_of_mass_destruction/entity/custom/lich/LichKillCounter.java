@@ -6,7 +6,7 @@ import com.cerbon.bosses_of_mass_destruction.particle.BMDParticles;
 import com.cerbon.cerbons_api.api.static_utilities.ParticleUtils;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +24,7 @@ public class LichKillCounter {
         this.config = config;
         this.countedEntities = config.entitiesThatCountToSummonCounter != null
                 ? config.entitiesThatCountToSummonCounter.stream()
-                .map(string -> BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.tryParse(string)))
+                .map(string -> BuiltInRegistries.ENTITY_TYPE.get(Identifier.tryParse(string)))
                 .collect(Collectors.toList())
                 : List.of();
     }

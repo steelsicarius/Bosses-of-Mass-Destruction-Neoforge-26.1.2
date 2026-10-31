@@ -9,7 +9,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BlindnessS2CPacket {
-    public static final ResourceLocation CHANNEL = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "blindness_s2c_packet");
+    public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "blindness_s2c_packet");
     public static final StreamCodec<FriendlyByteBuf, BlindnessS2CPacket> STREAM_CODEC = StreamCodec.ofMember(BlindnessS2CPacket::write, BlindnessS2CPacket::new);
 
     private final int entityId;

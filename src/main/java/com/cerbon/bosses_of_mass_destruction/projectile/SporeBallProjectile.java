@@ -18,7 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.Level;
@@ -115,7 +115,7 @@ public class SporeBallProjectile extends BaseThrownItemProjectile implements Geo
             }
         };
 
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             RiftBurst riftBurst = new RiftBurst(
                     owner,
                     (ServerLevel) level(),

@@ -7,14 +7,16 @@ import com.cerbon.bosses_of_mass_destruction.util.BMDConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.resources.Identifier;
+
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import com.geckolib.cache.model.BakedGeoModel;
-import com.geckolib.cache.model.GeoCube;
+import com.geckolib.cache.model.cuboid.GeoCube;
 import com.geckolib.model.GeoModel;
 import com.geckolib.renderer.GeoEntityRenderer;
 
@@ -22,7 +24,7 @@ public class GauntletEnergyRenderer implements IRendererWithModel, IRenderer<Gau
     private final GeoModel<GauntletEntity> geoModel;
     private final EntityRendererProvider.Context context;
 
-    private final ResourceLocation armorTexture = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith_armor.png");
+    private final Identifier armorTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith_armor.png");
     private RenderHelper geoModelProvider;
     private GauntletEntity gauntletEntity;
     private RenderType type;
@@ -52,11 +54,11 @@ public class GauntletEnergyRenderer implements IRendererWithModel, IRenderer<Gau
         float renderAlpha = gauntletEntity.energyShieldHandler.getRenderAlpha();
         if (renderAlpha == 0.0f) return;
         float lerpedAlpha = Mth.lerp(partialTicks, renderAlpha - 0.1f, renderAlpha);
-        int colour = FastColor.ARGB32.colorFromFloat(
-                lerpedAlpha,
-                0.8f * lerpedAlpha,
-                0.2f * lerpedAlpha,
-                0.2f * lerpedAlpha
+        int colour = ARGB.color(
+                (int) (lerpedAlpha * 255),
+                (int) (0.8f * lerpedAlpha * 255),
+                (int) (0.2f * lerpedAlpha * 255),
+                (int) (0.2f * lerpedAlpha * 255)
         );
 
         if (geoModelProvider == null) return;
@@ -75,25 +77,12 @@ public class GauntletEnergyRenderer implements IRendererWithModel, IRenderer<Gau
         );
     }
 
-    private static class RenderHelper extends GeoEntityRenderer<GauntletEntity> {
+    private static class RenderHelper extends GeoEntityRenderer<GauntletEntity, EntityRenderState> {
         private final GauntletEntity gauntletEntity;
 
         public RenderHelper(GauntletEntity gauntletEntity, GeoModel<GauntletEntity> parentModel, EntityRendererProvider.Context context) {
             super(context, parentModel);
             this.gauntletEntity = gauntletEntity;
-        }
-
-        @Override
-        public void renderCube(PoseStack poseStack, GeoCube cube, VertexConsumer buffer, int packedLight, int packedOverlay, int colour) {
-            poseStack.pushPose();
-            poseStack.scale(1.1f, 1.05f, 1.1f);
-            super.renderCube(poseStack, cube, buffer, IBoneLight.fullbright, packedOverlay, colour);
-            poseStack.popPose();
-        }
-
-        @Override
-        public GauntletEntity getAnimatable() {
-            return gauntletEntity;
         }
     }
 }

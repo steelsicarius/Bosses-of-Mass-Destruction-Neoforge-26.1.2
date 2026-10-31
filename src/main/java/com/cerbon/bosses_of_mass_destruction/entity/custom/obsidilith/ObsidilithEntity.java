@@ -39,8 +39,8 @@ import org.jetbrains.annotations.Nullable;
 import com.geckolib.animatable.GeoAnimatable;
 import com.geckolib.animatable.manager.AnimatableManager;
 import com.geckolib.animation.AnimationController;
-import com.geckolib.animation.PlayState;
 import com.geckolib.animation.RawAnimation;
+import com.geckolib.animation.object.PlayState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +150,7 @@ public class ObsidilithEntity extends BaseEntity {
     public void die(@NotNull DamageSource damageSource) {
         if (mobConfig.spawnPillarOnDeath) {
             ObsidilithUtils.onDeath(this, mobConfig.experienceDrop);
-            if (level().isClientSide)
+            if (level().isClientSide())
                 effectHandler.handleStatus(ObsidilithUtils.deathStatus);
         }
         super.die(damageSource);
@@ -185,8 +185,8 @@ public class ObsidilithEntity extends BaseEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<GeoAnimatable>(this, "summon", 0, animationState -> {
-            animationState.getController().setAnimation(RawAnimation.begin().thenPlay("summon"));
+        data.add(new AnimationController<>("summon", 0, animationState -> {
+            animationState.setAnimation(RawAnimation.begin().thenPlay("summon"));
             return PlayState.CONTINUE;
         }));
     }

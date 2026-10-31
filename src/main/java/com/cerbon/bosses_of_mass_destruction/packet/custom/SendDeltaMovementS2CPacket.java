@@ -9,11 +9,11 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class SendDeltaMovementS2CPacket {
-    public static final ResourceLocation CHANNEL = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "send_delta_movement_s2c_packet");
+    public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "send_delta_movement_s2c_packet");
     public static final StreamCodec<FriendlyByteBuf, SendDeltaMovementS2CPacket> STREAM_CODEC = StreamCodec.ofMember(SendDeltaMovementS2CPacket::write, SendDeltaMovementS2CPacket::new);
 
     private final Vec3 deltaMovement;

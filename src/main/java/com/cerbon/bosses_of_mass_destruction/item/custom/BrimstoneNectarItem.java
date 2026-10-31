@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,9 +42,9 @@ public class BrimstoneNectarItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player user, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(Level level, Player user, @NotNull InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
-        if (!level.isClientSide && level instanceof ServerLevel serverLevel){
+        if (!level.isClientSide() && level instanceof ServerLevel serverLevel){
             BlockPos usePos = user.blockPosition();
             List<StructureRepair> structuresToRepair = findStructuresToRepair(serverLevel, usePos);
 
@@ -58,11 +58,11 @@ public class BrimstoneNectarItem extends Item {
                     itemStack.shrink(1);
 
                 user.awardStat(Stats.ITEM_USED.get(this));
-                return InteractionResultHolder.sidedSuccess(itemStack, false);
+                return InteractionResult.SUCCESS;
             }
         }
 
-        return InteractionResultHolder.pass(itemStack);
+        return InteractionResult.PASS;
     }
 
     private List<StructureRepair> findStructuresToRepair(ServerLevel level, BlockPos usePos){

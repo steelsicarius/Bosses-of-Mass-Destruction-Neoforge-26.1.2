@@ -10,11 +10,11 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class SendVec3S2CPacket {
-    public static final ResourceLocation CHANNEL = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "send_vec3_s2c_packet");
+    public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "send_vec3_s2c_packet");
     public static final StreamCodec<FriendlyByteBuf, SendVec3S2CPacket> STREAM_CODEC = StreamCodec.ofMember(SendVec3S2CPacket::write, SendVec3S2CPacket::new);
 
     private final Vec3 pos;

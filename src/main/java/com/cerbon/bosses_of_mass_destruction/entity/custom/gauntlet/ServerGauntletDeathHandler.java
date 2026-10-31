@@ -12,7 +12,7 @@ import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.entity.Entity;
@@ -59,7 +59,7 @@ public class ServerGauntletDeathHandler implements IEntityTick<ServerLevel> {
         }
         BlockPos chestPos = entity.blockPosition().above();
         level.setBlock(chestPos, Blocks.CHEST.defaultBlockState(), 2);
-        RandomizableContainer.setBlockEntityLootTable(level, entity.getRandom(), chestPos, ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "chests/gauntlet")));
+        RandomizableContainer.setBlockEntityLootTable(level, entity.getRandom(), chestPos, ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "chests/gauntlet")));
     }
 
     private void dropExp(){

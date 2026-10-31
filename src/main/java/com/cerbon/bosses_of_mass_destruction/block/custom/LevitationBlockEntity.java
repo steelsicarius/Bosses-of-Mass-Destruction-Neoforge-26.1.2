@@ -56,7 +56,7 @@ public class LevitationBlockEntity extends ChunkCacheBlockEntity implements GeoB
 
     public static void tick(Level level, BlockPos pos, BlockState state, LevitationBlockEntity entity){
         ChunkCacheBlockEntity.tick(level, pos, state, entity);
-        if (level.isClientSide){
+        if (level.isClientSide()){
             entity.animationAge++;
 
             AABB box = getAffectingBox(level, VecUtils.asVec3(pos));

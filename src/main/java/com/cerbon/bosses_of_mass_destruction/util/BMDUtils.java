@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class BMDUtils {
-    public static final ResourceKey<DamageType> SHIELD_PIERCING = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "shield_piercing"));
+    public static final ResourceKey<DamageType> SHIELD_PIERCING = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "shield_piercing"));
 
     public static DamageSource shieldPiercing(Level level, Entity attacker) {
         return VanillaCopiesServer.create(level, SHIELD_PIERCING, attacker);

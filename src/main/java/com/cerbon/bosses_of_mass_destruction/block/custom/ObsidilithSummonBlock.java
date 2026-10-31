@@ -83,7 +83,7 @@ public class ObsidilithSummonBlock extends Block {
         if (blockState.is(BMDBlocks.OBSIDILITH_SUMMON_BLOCK.get()) && !blockState.getValue(EndPortalFrameBlock.HAS_EYE)){
             EventScheduler eventScheduler = CapabilityUtils.getLevelEventScheduler(level);
 
-            if (level.isClientSide){
+            if (level.isClientSide()){
                 cir.setReturnValue(InteractionResult.SUCCESS);
                 addSummonEntityEffects(eventScheduler, blockPos);
             } else {

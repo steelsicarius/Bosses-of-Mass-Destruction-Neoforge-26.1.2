@@ -20,7 +20,7 @@ public class VoidBlossomSummonBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, VoidBlossomSummonBlockEntity entity){
-        if (!level.isClientSide && entity.age % 20 == 0){
+        if (!level.isClientSide() && entity.age % 20 == 0){
             boolean playersInBox = !level.getEntitiesOfClass(Player.class, new AABB(pos).inflate(40.0)).isEmpty();
             if (playersInBox){
                 Vec3 spawnPos = VecUtils.asVec3(pos).add(new Vec3(0.5, 0.0, 0.5));

@@ -20,7 +20,7 @@ public class BMDBlocks {
             new ObsidilithRuneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
 
     public static final RegistryEntry<Block> VOID_BLOSSOM = BLOCKS.register("void_blossom", () ->
-            new VoidBlossomBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).instabreak().noCollission().lightLevel(value -> 11).sound(SoundType.SPORE_BLOSSOM)));
+            new VoidBlossomBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).instabreak().noCollision().lightLevel(value -> 11).sound(SoundType.SPORE_BLOSSOM)));
 
     public static final RegistryEntry<Block> VINE_WALL = BLOCKS.register("vine_wall", () ->
             new VineWallBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).sound(SoundType.WOOD).strength(2.0f, 6.0f)));
@@ -50,7 +50,7 @@ public class BMDBlocks {
             new VoidBlossomSummonBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BEDROCK)));
 
     public static final RegistryEntry<Block> VOID_LILY_BLOCK = BLOCKS.register("void_lily", () ->
-            new VoidLilyBlock(BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.GRASS).lightLevel(value -> 8)));
+            new VoidLilyBlock(BlockBehaviour.Properties.of().noCollision().randomTicks().instabreak().sound(SoundType.GRASS).lightLevel(value -> 8)));
 
     public static void register() {
         BLOCKS.register();

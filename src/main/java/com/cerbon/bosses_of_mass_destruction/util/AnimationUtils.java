@@ -3,7 +3,7 @@ package com.cerbon.bosses_of_mass_destruction.util;
 
 import com.geckolib.animatable.GeoAnimatable;
 import com.geckolib.animation.AnimationController;
-import com.geckolib.animation.PlayState;
+import com.geckolib.animation.object.PlayState;
 import com.geckolib.animation.RawAnimation;
 
 public class AnimationUtils {

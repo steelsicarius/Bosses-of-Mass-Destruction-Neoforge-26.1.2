@@ -12,7 +12,7 @@ import com.cerbon.cerbons_api.api.static_utilities.MobUtils;
 import com.cerbon.cerbons_api.api.static_utilities.SoundUtils;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
@@ -53,7 +53,7 @@ public class VolleyRageAction implements IActionWithCooldown {
 
     public int performVolley(ServerPlayer target) {
         int rageMissileVolleys = getRageMissileVolleys(entity).size();
-        final Optional<MobEffect> missileMobEffect = Optional.ofNullable(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.tryParse(mobConfig.missile.mobEffectId)));
+        final Optional<MobEffect> missileMobEffect = Optional.ofNullable(BuiltInRegistries.MOB_EFFECT.get(Identifier.tryParse(mobConfig.missile.mobEffectId)));
         final Function<Vec3, ProjectileThrower> missileThrower = getMissileThrower(missileMobEffect);
 
         SoundUtils.playSound(target.serverLevel(), entity.position(), BMDSounds.MISSILE_PREPARE.get(), SoundSource.HOSTILE, 4.0f, 64, null);

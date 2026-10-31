@@ -2,7 +2,7 @@ package com.cerbon.bosses_of_mass_destruction.projectile;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -29,7 +29,7 @@ public abstract class BaseThrownItemProjectile extends ThrowableItemProjectile {
     @Override
     public void tick() {
         super.tick();
-        if (level().isClientSide)
+        if (level().isClientSide())
             clientTick();
     }
 

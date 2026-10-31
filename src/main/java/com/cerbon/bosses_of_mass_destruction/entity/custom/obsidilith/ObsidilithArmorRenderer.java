@@ -9,11 +9,13 @@ import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.resources.Identifier;
+
+import net.minecraft.util.ARGB;
 import net.minecraft.world.phys.Vec3;
 import com.geckolib.cache.model.BakedGeoModel;
 import com.geckolib.cache.model.cuboid.GeoCube;
@@ -26,7 +28,7 @@ public class ObsidilithArmorRenderer implements IRendererWithModel, IRenderer<Ob
     private final GeoModel<ObsidilithEntity> geoModel;
     private final EntityRendererProvider.Context context;
 
-    private final ResourceLocation armorTexture = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith_armor.png");
+    private final Identifier armorTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith_armor.png");
     private RenderHelper geoModelProvider;
     private ObsidilithEntity obsidilithEntity;
     private RenderType type;
@@ -56,7 +58,7 @@ public class ObsidilithArmorRenderer implements IRendererWithModel, IRenderer<Ob
 
         if (obsidilithEntity.isShielded()){
             Vec3 color = getColor().add(VecUtils.unit).normalize().scale(0.6);
-            var colour = FastColor.ARGB32.colorFromFloat(1.0f, (float) color.x, (float) color.y, (float) color.z);
+            var colour = ARGB.color(255, (int) ((float) color.x * 255), (int) ((float) color.y * 255), (int) ((float) color.z * 255));
 
             if (geoModelProvider == null) return;
             geoModelProvider.actuallyRender(
@@ -88,25 +90,12 @@ public class ObsidilithArmorRenderer implements IRendererWithModel, IRenderer<Ob
         return color;
     }
 
-    private static class RenderHelper extends GeoEntityRenderer<ObsidilithEntity> {
+    private static class RenderHelper extends GeoEntityRenderer<ObsidilithEntity, EntityRenderState> {
         private final ObsidilithEntity entity;
 
         public RenderHelper(ObsidilithEntity entity, GeoModel<ObsidilithEntity> parentModel, EntityRendererProvider.Context context) {
             super(context, parentModel);
             this.entity = entity;
-        }
-
-        @Override
-        public void renderCube(PoseStack poseStack, GeoCube cube, VertexConsumer buffer, int packedLight, int packedOverlay, int colour) {
-            poseStack.pushPose();
-            poseStack.scale(1.08f, 1.05f, 1.08f);
-            super.renderCube(poseStack, cube, buffer, IBoneLight.fullbright, packedOverlay, colour);
-            poseStack.popPose();
-        }
-
-        @Override
-        public ObsidilithEntity getAnimatable() {
-            return entity;
         }
     }
 }

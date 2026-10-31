@@ -19,10 +19,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -144,7 +144,7 @@ public class ChargedEnderPearlEntity extends ThrowableItemProjectile {
 
 
     @Override
-    public @Nullable Entity changeDimension(DimensionTransition transition) {
+    public @Nullable Entity changeDimension(TeleportTransition transition) {
         Entity entity = getOwner();
         if (entity != null && entity.level().dimension() != transition.newLevel().dimension())
             setOwner(null);

@@ -13,7 +13,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class ObsidilithUtils {
     private static final int textureSize = 256;
-    private static final ResourceLocation bossBarDividerTexture = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/gui/obsidilith_boss_bar_dividers.png");
+    private static final Identifier bossBarDividerTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/gui/obsidilith_boss_bar_dividers.png");
     public static final List<Float> hpPillarShieldMilestones = List.of(0.0f, 0.25f, 0.5f, 0.75f, 1.0f);
     public static final NodeBossBarRenderer obsidilithBossBarRenderer = new NodeBossBarRenderer(BMDEntities.OBSIDILITH.get().getDescriptionId(), hpPillarShieldMilestones, bossBarDividerTexture, textureSize);
     public static final List<Vec3> circlePos = MathUtils.buildBlockCircle(Math.sqrt(Math.pow(2.0, 2) + Math.pow(1.0, 2)));
@@ -79,7 +79,7 @@ public class ObsidilithUtils {
                             () -> {
                                 BlockPos chestPos = blockPos.above(deathPillarHeight + 1);
                                 level.setBlock(chestPos, Blocks.SHULKER_BOX.defaultBlockState(), 2);
-                                RandomizableContainer.setBlockEntityLootTable(level, actor.getRandom(), chestPos, ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "chests/obsidilith")));
+                                RandomizableContainer.setBlockEntityLootTable(level, actor.getRandom(), chestPos, ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "chests/obsidilith")));
                             },
                             deathPillarHeight * ticksBetweenPillarLayer
                     )

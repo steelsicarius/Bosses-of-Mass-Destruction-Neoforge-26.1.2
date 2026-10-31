@@ -4,7 +4,7 @@ package com.cerbon.bosses_of_mass_destruction.client.render;
 import com.cerbon.bosses_of_mass_destruction.util.VanillaCopies;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
 import org.joml.Quaternionf;

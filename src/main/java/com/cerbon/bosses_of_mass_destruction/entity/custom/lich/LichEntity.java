@@ -100,7 +100,7 @@ public class LichEntity extends BaseEntity {
         serverTick = new CompositeEntityTick<>(cappedHeal, moveLogic);
         clientTick = lichParticles;
 
-        if (!level.isClientSide){
+        if (!level.isClientSide()){
             LichActions attackHelper = new LichActions(this, moveLogic);
             LichMovement moveHelper = new LichMovement(this);
 

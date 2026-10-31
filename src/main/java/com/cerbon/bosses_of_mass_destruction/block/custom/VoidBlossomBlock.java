@@ -106,7 +106,7 @@ public class VoidBlossomBlock extends Block {
 
     @Override
     public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             for (int i = 0; i < 12; i++){
                 Vec3 vel = VecUtils.yAxis.scale(RandomUtils.range(0.1, 0.2));
                 Vec3 spawnPos = VecUtils.asVec3(pos).add(VecUtils.unit.scale(0.5)).add(VecUtils.planeProject(RandomUtils.randVec(), VecUtils.yAxis).normalize().scale(0.5));

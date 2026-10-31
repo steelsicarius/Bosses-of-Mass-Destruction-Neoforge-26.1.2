@@ -107,7 +107,7 @@ public class MobWardBlock extends BaseEntityBlock {
 
     @Override
     public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
-        if (!level.isClientSide && player.isCreative()){
+        if (!level.isClientSide() && player.isCreative()){
             TripleBlockPart part = state.getValue(tripleBlockPart);
 
             if (part == TripleBlockPart.MIDDLE){

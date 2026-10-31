@@ -95,7 +95,7 @@ public class MonolithBlock extends BaseEntityBlock {
 
     @Override
     public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
-        if (!level.isClientSide && player.isCreative()){
+        if (!level.isClientSide() && player.isCreative()){
             VanillaCopiesServer.onBreakInCreative(level, pos, state, player);
         }
         return super.playerWillDestroy(level, pos, state, player);

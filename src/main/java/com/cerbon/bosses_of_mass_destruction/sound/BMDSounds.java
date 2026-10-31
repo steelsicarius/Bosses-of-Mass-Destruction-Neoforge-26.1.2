@@ -5,7 +5,7 @@ import com.cerbon.cerbons_api.api.registry.RegistryEntry;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistries;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 public class BMDSounds {
@@ -61,7 +61,7 @@ public class BMDSounds {
     public static final RegistryEntry<SoundEvent> BRIMSTONE = registerSoundEvent("brimstone");
 
     private static RegistryEntry<SoundEvent> registerSoundEvent(String name) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, name);
+        Identifier id = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
     }
 

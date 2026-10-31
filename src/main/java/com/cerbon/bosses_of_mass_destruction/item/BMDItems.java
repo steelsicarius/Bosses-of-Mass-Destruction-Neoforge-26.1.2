@@ -10,11 +10,8 @@ import com.cerbon.bosses_of_mass_destruction.util.BMDConstants;
 import com.cerbon.cerbons_api.api.registry.RegistryEntry;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistries;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -91,7 +88,7 @@ public class BMDItems {
     
     public static void initClient() {
         ItemProperties.register(BMDItems.EARTHDIVE_SPEAR.get(),
-                ResourceLocation.withDefaultNamespace("throwing"),
+                Identifier.withDefaultNamespace("throwing"),
                 (stack, level, entity, seed) -> {
                     if (entity == null)
                         return 0.0f;

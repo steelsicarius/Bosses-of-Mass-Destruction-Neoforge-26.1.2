@@ -4,8 +4,8 @@ import com.cerbon.bosses_of_mass_destruction.entity.util.BaseEntity;
 import com.cerbon.bosses_of_mass_destruction.entity.util.IEntityEventHandler;
 import com.geckolib.animatable.manager.AnimatableManager;
 import com.geckolib.animation.AnimationController;
-import com.geckolib.animation.PlayState;
 import com.geckolib.animation.RawAnimation;
+import com.geckolib.animation.object.PlayState;
 
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class AnimationHolder implements IEntityEventHandler {
     }
 
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(entity, transition, attack));
+        data.add(new AnimationController<>("attack", transition, attack));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class AnimationHolder implements IEntityEventHandler {
         nextAnimation = null;
 
         if (animationData != null){
-            animationState.getController().forceAnimationReset();
+            animationState.controller().reset();
             animationState.setAnimation(RawAnimation.begin().thenPlay(animationData.animationName).thenLoop(animationData.idleAnimationName));
         }
 
@@ -54,4 +54,3 @@ public class AnimationHolder implements IEntityEventHandler {
 
     public record Animation(String animationName, String idleAnimationName) {}
 }
-

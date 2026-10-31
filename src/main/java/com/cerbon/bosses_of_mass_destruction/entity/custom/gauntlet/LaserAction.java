@@ -12,7 +12,7 @@ import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.MathUtils;
 import com.cerbon.cerbons_api.api.static_utilities.MobUtils;
 import com.cerbon.cerbons_api.api.static_utilities.SoundUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +36,7 @@ public class LaserAction implements IActionWithCooldown {
 
     public static final int laserLagTicks = 8;
 
-    private static final ResourceLocation laserDamageModifier = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "laser");
+    private static final Identifier laserDamageModifier = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "laser");
 
     public LaserAction(GauntletEntity entity, EventScheduler eventScheduler, Supplier<Boolean> cancelAction, ServerLevel serverLevel) {
         this.entity = entity;

@@ -33,11 +33,13 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.phys.Vec3;
@@ -51,56 +53,56 @@ public class BMDEntities {
             () -> EntityType.Builder.<LichEntity>of((entityType, level) -> new LichEntity(entityType, level, mobConfig.lichConfig), MobCategory.MONSTER)
                     .sized(1.8f, 3.0f)
                     .updateInterval(1)
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "lich").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "lich"))));
 
     public static final RegistryEntry<EntityType<MagicMissileProjectile>> MAGIC_MISSILE = ENTITY_TYPES.register("blue_fireball",
             () -> EntityType.Builder.<MagicMissileProjectile>of(MagicMissileProjectile::new, MobCategory.MISC)
                     .sized(0.25f, 0.25f)
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "blue_fireball").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "blue_fireball"))));
 
     public static final RegistryEntry<EntityType<CometProjectile>> COMET = ENTITY_TYPES.register("comet",
             () -> EntityType.Builder.<CometProjectile>of(CometProjectile::new, MobCategory.MISC)
                     .sized(0.25f, 0.25f)
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet"))));
 
     public static final RegistryEntry<EntityType<SoulStarEntity>> SOUL_STAR = ENTITY_TYPES.register("soul_star",
             () -> EntityType.Builder.<SoulStarEntity>of(SoulStarEntity::new, MobCategory.MISC)
                     .sized(0.25f, 0.25f)
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "soul_star").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "soul_star"))));
 
     public static final RegistryEntry<EntityType<ChargedEnderPearlEntity>> CHARGED_ENDER_PEARL = ENTITY_TYPES.register("charged_ender_pearl",
             () -> EntityType.Builder.of(ChargedEnderPearlEntity::new, MobCategory.MISC)
                     .sized(0.25f, 0.25f)
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "charged_ender_pearl").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "charged_ender_pearl"))));
 
     public static final RegistryEntry<EntityType<ObsidilithEntity>> OBSIDILITH = ENTITY_TYPES.register("obsidilith",
             () -> EntityType.Builder.<ObsidilithEntity>of((entityType, level) -> new ObsidilithEntity(entityType, level, mobConfig.obsidilithConfig), MobCategory.MONSTER)
                     .sized(2.0f, 4.4f)
                     .fireImmune()
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "obsidilith").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "obsidilith"))));
 
     public static final RegistryEntry<EntityType<GauntletEntity>> GAUNTLET = ENTITY_TYPES.register("gauntlet",
             () -> EntityType.Builder.<GauntletEntity>of((entityType, level) -> new GauntletEntity(entityType, level, mobConfig.gauntletConfig) , MobCategory.MONSTER)
                     .sized(5.0f, 4.0f)
                     .fireImmune()
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "gauntlet").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "gauntlet"))));
 
     public static final RegistryEntry<EntityType<VoidBlossomEntity>> VOID_BLOSSOM = ENTITY_TYPES.register("void_blossom",
             () -> EntityType.Builder.<VoidBlossomEntity>of((entityType, level) -> new VoidBlossomEntity(entityType, level, mobConfig.voidBlossomConfig), MobCategory.MONSTER)
                     .sized(8.0f, 10.0f)
                     .fireImmune()
                     .clientTrackingRange(3)
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "void_blossom").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "void_blossom"))));
 
     public static final RegistryEntry<EntityType<SporeBallProjectile>> SPORE_BALL = ENTITY_TYPES.register("spore_ball",
             () -> EntityType.Builder.<SporeBallProjectile>of(SporeBallProjectile::new, MobCategory.MISC)
                     .sized(0.25f, 0.25f)
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "spore_ball").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "spore_ball"))));
 
     public static final RegistryEntry<EntityType<PetalBladeProjectile>> PETAL_BLADE = ENTITY_TYPES.register("petal_blade",
             () -> EntityType.Builder.<PetalBladeProjectile>of(PetalBladeProjectile::new, MobCategory.MISC)
                     .sized(0.25f, 0.25f)
-                    .build(ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "petal_blade").toString()));
+                    .build(ResourceKey.create(BuiltInRegistries.ENTITY_TYPE.key(), Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "petal_blade"))));
 
     public static final LichKillCounter killCounter = new LichKillCounter(mobConfig.lichConfig.summonMechanic);
 
@@ -109,13 +111,13 @@ public class BMDEntities {
         PauseAnimationTimer pauseSecondTimer = new PauseAnimationTimer(Blaze3D::getTime, () -> Minecraft.getInstance().isPaused());
 
         EntityRenderers.register(LICH.get(), context -> {
-            ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/lich.png");
+            Identifier texture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/lich.png");
             return new SimpleLivingGeoRenderer<>(
                     context,
                     new GeoModel<>(
-                            lichEntity -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/lich.geo.json"),
+                            lichEntity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/lich.geo.json"),
                             entity -> texture,
-                            ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/lich.animation.json"),
+                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/lich.animation.json"),
                             new LichCodeAnimations(),
                             RenderType::entityCutoutNoCull
                     ),
@@ -131,9 +133,9 @@ public class BMDEntities {
         EntityRenderers.register(OBSIDILITH.get(), context -> {
             ObsidilithBoneLight runeColorHandler = new ObsidilithBoneLight();
             GeoModel<ObsidilithEntity> modelProvider = new GeoModel<>(
-                    entity -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/obsidilith.geo.json"),
-                    entity -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith.png"),
-                    ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/obsidilith.animation.json"),
+                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/obsidilith.geo.json"),
+                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith.png"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/obsidilith.animation.json"),
                     (animatable, data, geoModel) -> {},
                     RenderType::entityCutout
             );
@@ -154,9 +156,9 @@ public class BMDEntities {
                 new SimpleLivingGeoRenderer<>(
                         context,
                         new GeoModel<>(
-                                geoAnimatable -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/comet.geo.json"),
-                                entity -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/comet.png"),
-                                ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/comet.animation.json"),
+                                geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/comet.geo.json"),
+                                entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/comet.png"),
+                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/comet.animation.json"),
                                 new CometCodeAnimations(),
                                 RenderType::entityCutout
                         ),
@@ -176,7 +178,7 @@ public class BMDEntities {
 
         EntityRenderers.register(CHARGED_ENDER_PEARL.get(), ThrownItemRenderer::new);
 
-        ResourceLocation missileTexture = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/blue_magic_missile.png");
+        Identifier missileTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/blue_magic_missile.png");
         RenderType magicMissileRenderType = RenderType.entityCutoutNoCull(missileTexture);
         EntityRenderers.register(MAGIC_MISSILE.get(), context ->
                 new SimpleEntityRenderer<>(context,
@@ -191,9 +193,9 @@ public class BMDEntities {
 
         EntityRenderers.register(GAUNTLET.get(), context -> {
             GeoModel<GauntletEntity> modelProvider = new GeoModel<>(
-                    entity -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/gauntlet.geo.json"),
+                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/gauntlet.geo.json"),
                     new GauntletTextureProvider(),
-                    ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/gauntlet.animation.json"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/gauntlet.animation.json"),
                     new GauntletCodeAnimations(),
                     RenderType::entityCutout
             );
@@ -220,11 +222,11 @@ public class BMDEntities {
         });
 
         EntityRenderers.register(VOID_BLOSSOM.get(), context -> {
-            ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/void_blossom.png");
+            Identifier texture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/void_blossom.png");
             GeoModel<VoidBlossomEntity> modelProvider = new GeoModel<>(
-                    entity -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/void_blossom.geo.json"),
+                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/void_blossom.geo.json"),
                     entity -> texture,
-                    ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/void_blossom.animation.json"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/void_blossom.animation.json"),
                     new VoidBlossomCodeAnimations(),
                     RenderType::entityCutout
             );
@@ -247,9 +249,9 @@ public class BMDEntities {
             return new SimpleLivingGeoRenderer<>(
                     context,
                     new GeoModel<>(
-                            geoAnimatable -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/comet.geo.json"),
-                            entity -> ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/spore.png"),
-                            ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/comet.animation.json"),
+                            geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/comet.geo.json"),
+                            entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/spore.png"),
+                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/comet.animation.json"),
                             new SporeCodeAnimations(),
                             RenderType::entityCutout),
                     new FullRenderLight<>(),
@@ -272,7 +274,7 @@ public class BMDEntities {
                     true);
         });
 
-        ResourceLocation petalTexture = ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/petal_blade.png");
+        Identifier petalTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/petal_blade.png");
         RenderType petalBladeRenderType = RenderType.entityCutoutNoCull(petalTexture);
         EntityRenderers.register(PETAL_BLADE.get(), context ->
                 new SimpleEntityRenderer<>(context,

@@ -12,11 +12,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class SendParticleS2CPacket {
-    public static final ResourceLocation CHANNEL = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "send_particle_s2c_packet");
+    public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "send_particle_s2c_packet");
     public static final StreamCodec<FriendlyByteBuf, SendParticleS2CPacket> STREAM_CODEC = StreamCodec.ofMember(SendParticleS2CPacket::write, SendParticleS2CPacket::new);
 
     private final BlockPos pos;

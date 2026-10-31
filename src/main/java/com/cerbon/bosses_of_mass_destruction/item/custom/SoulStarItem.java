@@ -17,14 +17,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -123,12 +122,12 @@ public class SoulStarItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand usedHand) {
+    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
         BlockHitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
 
         if (hitResult.getType() == HitResult.Type.BLOCK && level.getBlockState(hitResult.getBlockPos()).is(BMDBlocks.CHISELED_STONE_ALTAR.get())){
-            return InteractionResultHolder.pass(itemStack);
+            return InteractionResult.PASS;
 
         }else {
             player.startUsingItem(usedHand);
@@ -165,7 +164,7 @@ public class SoulStarItem extends Item {
 
     public void spawnLich(BlockPos blockPos, Level level){
         CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putString("id", ResourceLocation.fromNamespaceAndPath(BMDConstants.MOD_ID, "lich").toString());
+        compoundTag.putString("id", Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "lich").toString());
 
         Vec3 spawnPos = VecUtils.asVec3(blockPos);
         boolean spawned = new MobPlacementLogic(
