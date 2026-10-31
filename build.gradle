@@ -1,0 +1,57 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.148'
+    id 'idea'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+version = mod_version
+group = mod_group_id
+
+sourceSets.main.resources {
+    srcDir('src/generated/resources')
+    exclude("**/*.bbmodel")
+    exclude("src/generated/**/.cache")
+}
+
+repositories {
+    flatDir {
+        dir 'libs'
+    }
+    maven {
+        url "https://maven.neoforged.net/releases/"
+    }
+    maven {
+        url "https://maven.shedaniel.me/"
+    }
+}
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+neoForge {
+    version = project.neo_version
+    
+    // Configurar mappings mediante el bloque loom del plugin moddev
+    // Este plugin usa su propia DSL para configuraciones avanzadas
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:26.1.2.114"
+
+    // CERBONs-API NeoForge port (local jar)
+    implementation 'com.cerbon:cerbons_api-neoforge-1.21-1.2.0'
+
+    // GeckoLib (version 5.5.2)
+    implementation 'com.geckolib:geckolib-neoforge-26.1.2:5.5.2'
+
+    // Cloth Config NeoForge
+    implementation 'me.shedaniel.cloth:cloth-config-neoforce-15.0.140'
+}
