@@ -2,13 +2,42 @@
 
 [![License](https://img.shields.io/badge/license-GNU%20LGPL--3.0-blue.svg)](LICENSE)
 [![NeoForge](https://img.shields.io/badge/minecraft-26.1.2-2D3748.svg)](https://neoforged.net/)
-[![Forge](https://img.shields.io/badge/minecraft-1.21-2D3748.svg)](https://files.minecraftforge.net/)
 
 ## Installation
 
 1. Install NeoForge Mod Loader 26.1.2
 2. Download the latest mod JAR file from the releases
 3. Place the mod file in your `mods` folder
+
+## Porting Status
+
+This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 (MC 26.1.2, Java 25).
+
+### Completed
+- Build system migrated to NeoForge MDK (net.neoforged.moddev 2.0.148)
+- All Forge-specific packages removed and replaced with NeoForge equivalents
+- Import/class name changes for Minecraft 26.1.2 API:
+  - `net.minecraft.util.ResourceLocation` → `net.minecraft.resources.Identifier`
+  - `net.minecraft.util.FastColor` → `net.minecraft.util.ARGB`
+  - `net.minecraft.client.renderer.RenderType` → `net.minecraft.client.renderer.rendertype.RenderType`
+  - `net.minecraft.world.item.UseAnim` → `net.minecraft.world.item.ItemUseAnimation`
+  - `Level.isClientSide` field → `isClientSide()` method
+  - `EntityType.Builder.build(String)` → `build(ResourceKey)`
+  - `BlockEntityType.Builder.build(null)` → `build(ResourceKey)`
+  - `SavedData.Factory` → `SavedDataType`
+  - `Item.use()` returns `InteractionResult` (not `InteractionResultHolder`)
+  - `EventBusSubscriber.bus` parameter removed
+  - GeckoLib 5.5.2 API changes (PlayState, AnimationStateHandler, GeoCube package, etc.)
+
+### Remaining Work (~200 compilation errors)
+- Renderer classes need complete rewrite for Minecraft 26.1.2 render state system
+  - `BlockEntityRenderer<T>` → `BlockEntityRenderer<T, R extends BlockEntityRenderState>`
+  - `EntityRenderer<T>` → `EntityRenderer<T, R extends EntityRenderState>`
+  - Old `render(PoseStack, ...)` methods replaced by `submit(RenderState, ...)`
+- Block entity `loadAdditional`/`saveAdditional` method signatures changed
+- Block `updateShape` method signature changed
+- `ChunkPos` record constructor and field access changes
+- Various other Minecraft 26.1.2 API changes
 
 ### Note on Parchment Mappings
 
