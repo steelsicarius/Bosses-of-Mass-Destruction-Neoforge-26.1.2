@@ -12,9 +12,6 @@ import com.cerbon.cerbons_api.api.network.Dispatcher;
 import com.cerbon.cerbons_api.api.static_utilities.CapabilityUtils;
 import com.cerbon.cerbons_api.api.static_utilities.SoundUtils;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -70,7 +67,4 @@ public class ObsidilithStructureRepair implements StructureRepair{
     }
 
     
-    public static void handleObsidilithRevivePacket(Vec3 pos, ClientLevel level) {
-        ObsidilithEffectHandler.spawnPillarParticles(pos, level, CapabilityUtils.getLevelEventScheduler(level));
-    }
 }
