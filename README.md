@@ -28,16 +28,33 @@ This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 
   - `Item.use()` returns `InteractionResult` (not `InteractionResultHolder`)
   - `EventBusSubscriber.bus` parameter removed
   - GeckoLib 5.5.2 API changes (PlayState, AnimationStateHandler, GeoCube package, etc.)
-
-  - GeckoLib 5.5.2 API changes (PlayState, AnimationStateHandler, GeoCube package, etc.)
+- CERBONs API ported to 26.1.2 first (see `../CERBONs-API-master-26.1.2`), jar
+  `libs/cerbons_api-neoforge-26.1.2-1.2.0.jar` replaces the 1.21 binary
+- Dependencies updated to MC 26.1.2 builds in `libs/`:
+  - `cloth-config-26.1.154.jar`, `geckolib-neoforge-26.1.2-5.5.2.jar`
+- Block/Item registration uses `Properties.setId(ResourceKey)` (mandatory in 26.1.2)
+- Client-only code isolated from common classes (server `DistCleaner` crashes otherwise):
+  - `client/BMDEntitiesClient`, `client/BMDBlockEntitiesClient` (renderers)
+  - `client/BMDS2CPacketHandlers` (injected `clientHandler` consumers on packets)
+  - `client/VoidBlossomClient`, `client/VoidLilyClient`, `client/ReviveParticlesClient`,
+    `client/BrimstoneNectarEffectsClient` (particle handlers)
+- Recipe JSONs updated to 26.1.2 ingredient format (plain item strings)
+- Dedicated server verified: boots with all 4 mods (cerbons_api, cloth_config,
+  geckolib, bosses_of_mass_destruction) and reaches "Done" on port 25599
 
 ### Compilation
-- `./gradlew compileJava` now passes with BUILD SUCCESSFUL (0 errors)
+- `./gradlew build` produces `build/libs/BOMD-1.3.3.jar` (BUILD SUCCESSFUL)
+- `./gradlew runServer` boots a dedicated server (configure `run/server.properties`
+  with `server-port=25599`, `server-ip=0.0.0.0` and `run/eula.txt=eula=true`)
 - Remaining work:
-  - CERBONs API particle system (TextureSheetParticle removed) - particles stubbed out
-  - Cloth Config AutoConfig API updated to AutoConfigClient.getConfigScreen
+  - Client-side testing (renderers were moved but not visually verified; no display in this environment)
+  - Particle renderers stubbed out: `PetalBladeParticleRenderer`, `ObsidilithEffectHandler` effects,
+    `GauntletEnergyRenderer`/`LaserParticleRenderer` paths pending new particle API usage
+  - Vanilla mixins of the mod are temporarily disabled (`bosses_of_mass_destruction-common.mixins.json`
+    is empty): `EnderEyeUseMixin`, `ExplosionMixin`, `IceBlockMixin`, `LivingEntityMixin`,
+    `NaturalSpawnerMixin`, `BossHealthOverlayMixin` must be re-ported to 26.1.2 targets
+  - `BMDItems.initClient()`: the "throwing" item model property needs the new 26.1.2 item model API
   - Food effects removed (FoodProperties.Builder.effect() no longer exists)
-  - Client-side particle renderers need new particle system implementation
 
 ### Note on Parchment Mappings
 
