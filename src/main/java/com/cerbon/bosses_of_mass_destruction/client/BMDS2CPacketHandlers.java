@@ -13,6 +13,8 @@ import com.cerbon.bosses_of_mass_destruction.packet.custom.SpikeS2CPacket;
 import com.cerbon.bosses_of_mass_destruction.packet.custom.VoidBlossomReviveS2CPacket;
 import com.cerbon.bosses_of_mass_destruction.client.VoidBlossomClient;
 import com.cerbon.bosses_of_mass_destruction.entity.custom.obsidilith.ObsidilithEffectHandler;
+import com.cerbon.bosses_of_mass_destruction.entity.custom.void_blossom.VoidBlossomEntity;
+import com.cerbon.bosses_of_mass_destruction.util.VecId;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import com.cerbon.cerbons_api.api.network.data.Side;
 import com.cerbon.cerbons_api.api.static_utilities.CapabilityUtils;
@@ -23,6 +25,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import com.cerbon.bosses_of_mass_destruction.entity.custom.gauntlet.GauntletEntity;
+import com.cerbon.bosses_of_mass_destruction.item.custom.ChargedEnderPearlEntity;
+import java.util.Arrays;
+import java.util.List;
 import net.minecraft.world.phys.Vec3;
 
 /** Client-side handlers for BOMD S2C packets. Assigned on client setup. */
