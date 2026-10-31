@@ -132,14 +132,11 @@ configurations {
 }
 
 dependencies {
-    // Dependency from libs (Cerbons API)
+    // Dependencies from libs folder:
+    // - cerbons_api-neoforge-26.1.2-1.2.0.jar (ported CERBONs API)
+    // - cloth-config-26.1.154.jar (Cloth Config for MC 26.1.2)
+    // - geckolib-neoforge-26.1.2-5.5.2.jar (GeckoLib for MC 26.1.2)
     implementation fileTree(dir: 'libs', include: '*.jar')
-
-    // Cloth Config - using Maven
-    implementation "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
-
-    // Geckolib - using Maven (version 5.5.2 is available from ModMaven)
-    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${project.geckolib_version}"
 
     // Mixin Extras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixin_extras_version}"))
@@ -195,6 +192,12 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+tasks.register('printClasspath') {
+    doLast {
+        println sourceSets.main.compileClasspath.asPath
+    }
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.

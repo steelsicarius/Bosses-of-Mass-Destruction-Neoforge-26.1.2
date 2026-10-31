@@ -1,6 +1,8 @@
 package com.cerbon.bosses_of_mass_destruction.neoforge.event;
 
 import com.cerbon.bosses_of_mass_destruction.block.BMDBlockEntities;
+import com.cerbon.bosses_of_mass_destruction.client.BMDBlockEntitiesClient;
+import com.cerbon.bosses_of_mass_destruction.client.BMDEntitiesClient;
 import com.cerbon.bosses_of_mass_destruction.config.BMDConfig;
 import com.cerbon.bosses_of_mass_destruction.entity.BMDEntities;
 import com.cerbon.bosses_of_mass_destruction.item.BMDItems;
@@ -23,8 +25,8 @@ public class BMDClientEventsNeo {
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             BMDItems.initClient();
-            BMDEntities.initClient();
-            BMDBlockEntities.initClient();
+            BMDEntitiesClient.init();
+            BMDBlockEntitiesClient.init();
             ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (modContainer, screen) -> AutoConfigClient.getConfigScreen(BMDConfig.class, screen).get());
         });
     }

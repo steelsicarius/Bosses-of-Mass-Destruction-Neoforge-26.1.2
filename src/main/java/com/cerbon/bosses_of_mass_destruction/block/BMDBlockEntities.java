@@ -34,21 +34,6 @@ public class BMDBlockEntities {
             new BlockEntityType<>(VoidLilyBlockEntity::new, BMDBlocks.VOID_LILY_BLOCK.get()));
 
     
-    public static void initClient() {
-        BlockEntityRenderers.register(LEVITATION_BLOCK_ENTITY.get(), context ->
-                new BMDBlockEntityRenderer<LevitationBlockEntity>(
-                        context,
-                        new GeoModel<LevitationBlockEntity>(
-                                entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/levitation_block.geo.json"),
-                                entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/block/levitation_block.png"),
-                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/levitation_block.animation.json"),
-                                (animatable, data, geoModel) -> {}
-                        ),
-                        (bone, packedLight) -> IBoneLight.fullbright
-                )
-        );
-    }
-
     public static void register() {
         BLOCKS_ENTITIES.register();
     }
