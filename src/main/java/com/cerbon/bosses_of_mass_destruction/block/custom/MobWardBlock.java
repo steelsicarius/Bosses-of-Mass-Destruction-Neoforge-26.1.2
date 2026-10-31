@@ -3,9 +3,6 @@ package com.cerbon.bosses_of_mass_destruction.block.custom;
 import com.cerbon.bosses_of_mass_destruction.block.BMDBlockEntities;
 import com.cerbon.bosses_of_mass_destruction.block.BMDBlocks;
 import com.cerbon.bosses_of_mass_destruction.capability.util.BMDCapabilities;
-import com.cerbon.bosses_of_mass_destruction.entity.custom.lich.LichUtils;
-import com.cerbon.bosses_of_mass_destruction.particle.BMDParticles;
-import com.cerbon.cerbons_api.api.general.particle.ClientParticleBuilder;
 import com.cerbon.cerbons_api.api.static_utilities.RandomUtils;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import com.mojang.serialization.MapCodec;
@@ -29,6 +26,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -37,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MobWardBlock extends BaseEntityBlock {
     public static final MapCodec<MobWardBlock> CODEC = simpleCodec(MobWardBlock::new);
@@ -72,34 +72,28 @@ public class MobWardBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.bosses_of_mass_destruction.mob_ward.tooltip").withStyle(ChatFormatting.DARK_GRAY));
-
-    }
-
-    @Override
-    public @NotNull BlockState updateShape(BlockState state, @NotNull Direction direction, @NotNull BlockState newState, @NotNull LevelAccessor level, @NotNull BlockPos pos, @NotNull BlockPos posFrom) {
+    public @NotNull BlockState updateShape(BlockState state, @NotNull LevelReader level, @NotNull ScheduledTickAccess tickAccess, @NotNull BlockPos pos, @NotNull Direction direction, @NotNull BlockPos neighborPos, @NotNull BlockState neighborState, @NotNull RandomSource random) {
         TripleBlockPart thisState = state.getValue(tripleBlockPart);
-        BlockState superState = super.updateShape(state, direction, newState, level, pos, posFrom);
+        BlockState superState = super.updateShape(state, level, tickAccess, pos, direction, neighborPos, neighborState, random);
         BlockState air = Blocks.AIR.defaultBlockState();
-        boolean otherState = newState.is(this);
+        boolean otherState = neighborState.is(this);
         BlockState facingState;
         facingState = otherState
-                ? state.setValue(HorizontalDirectionalBlock.FACING, newState.getValue(HorizontalDirectionalBlock.FACING))
+                ? state.setValue(HorizontalDirectionalBlock.FACING, neighborState.getValue(HorizontalDirectionalBlock.FACING))
                 : air;
 
         return switch (thisState) {
             case BOTTOM -> switch (direction) {
-                case UP -> (otherState && newState.getValue(tripleBlockPart) == TripleBlockPart.MIDDLE) ? facingState : air;
+                case UP -> (otherState && neighborState.getValue(tripleBlockPart) == TripleBlockPart.MIDDLE) ? facingState : air;
                 default -> superState;
             };
             case MIDDLE -> switch (direction) {
-                case UP -> (otherState && newState.getValue(tripleBlockPart) == TripleBlockPart.TOP) ? facingState : air;
-                case DOWN -> (otherState && newState.getValue(tripleBlockPart) == TripleBlockPart.BOTTOM) ? facingState : air;
+                case UP -> (otherState && neighborState.getValue(tripleBlockPart) == TripleBlockPart.TOP) ? facingState : air;
+                case DOWN -> (otherState && neighborState.getValue(tripleBlockPart) == TripleBlockPart.BOTTOM) ? facingState : air;
                 default -> superState;
             };
             case TOP -> switch (direction) {
-                case DOWN -> (otherState && newState.getValue(tripleBlockPart) == TripleBlockPart.MIDDLE) ? facingState : air;
+                case DOWN -> (otherState && neighborState.getValue(tripleBlockPart) == TripleBlockPart.MIDDLE) ? facingState : air;
                 default -> superState;
             };
         };
@@ -137,7 +131,7 @@ public class MobWardBlock extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockPos blockPos = ctx.getClickedPos();
 
-        if (blockPos.getY() < ctx.getLevel().getMaxBuildHeight() - 2 && ctx.getLevel().getBlockState(blockPos.above()).canBeReplaced(ctx) && ctx.getLevel().getBlockState(blockPos.above(2)).canBeReplaced(ctx))
+        if (ctx.getLevel().isInWorldBounds(blockPos.above(2)) && ctx.getLevel().getBlockState(blockPos.above()).canBeReplaced(ctx) && ctx.getLevel().getBlockState(blockPos.above(2)).canBeReplaced(ctx))
             return getStateDefinition().any().setValue(DoorBlock.FACING, ctx.getHorizontalDirection()).setValue(tripleBlockPart, TripleBlockPart.BOTTOM);
         else
             return null;
@@ -188,22 +182,9 @@ public class MobWardBlock extends BaseEntityBlock {
                 double randomHeight = RandomUtils.randDouble(0.25) + 0.25;
                 double randomRadius = RandomUtils.randDouble(0.1) + 0.3;
                 double randomOffset = RandomUtils.randDouble(Math.PI);
-                Particles.blueFireParticleFactory.continuousPosition(simpleParticle ->
-                        calcParticlePos(
-                                vecPos,
-                                randomOffset,
-                                randomRadius,
-                                randomHeight,
-                                simpleParticle.getAge() * 0.1
-                        )).build(
-                        calcParticlePos(
-                                vecPos,
-                                randomOffset,
-                                randomRadius,
-                                randomHeight,
-                                .0
-                        ), Vec3.ZERO
-                );
+                double age = random.nextDouble() * 0.1;
+                Vec3 particlePos = calcParticlePos(vecPos, randomOffset, randomRadius, randomHeight, age);
+                lvel.addParticle(net.minecraft.core.particles.ParticleTypes.SOUL_FIRE_FLAME, particlePos.x(), particlePos.y(), particlePos.z(), 0, 0, 0);
             }
         }
     }
@@ -219,10 +200,10 @@ public class MobWardBlock extends BaseEntityBlock {
     public static void canSpawn(ServerLevel serverLevel, BlockPos.MutableBlockPos pos, CallbackInfoReturnable<Boolean> cir){
         if (!cir.getReturnValue()) return;
 
-        ChunkPos chunkPos = new ChunkPos(pos);
+        ChunkPos chunkPos = ChunkPos.containing(pos);
         BMDCapabilities.getChunkBlockCache(serverLevel).ifPresent(capability -> {
-            for (int x = chunkPos.x - 4; x <= chunkPos.x + 4; x++)
-                for (int z = chunkPos.z - 4; z <= chunkPos.z + 4; z++){
+            for (int x = chunkPos.x() - 4; x <= chunkPos.x() + 4; x++)
+                for (int z = chunkPos.z() - 4; z <= chunkPos.z() + 4; z++){
                     List<BlockPos> blocks = capability.getBlocksFromChunk(new ChunkPos(x, z), BMDBlocks.MOB_WARD.get());
                     if (blocks == null) return;
                     for (BlockPos blockPos : blocks) {
@@ -235,11 +216,4 @@ public class MobWardBlock extends BaseEntityBlock {
         });
     }
 
-    private static class Particles {
-        private static final ClientParticleBuilder blueFireParticleFactory = new ClientParticleBuilder(BMDParticles.SOUL_FLAME.get())
-                .color(LichUtils.blueColorFade)
-                .age(30, 40)
-                .colorVariation(0.5)
-                .scale(f -> 0.15f - (f * 0.1f));
-    }
 }

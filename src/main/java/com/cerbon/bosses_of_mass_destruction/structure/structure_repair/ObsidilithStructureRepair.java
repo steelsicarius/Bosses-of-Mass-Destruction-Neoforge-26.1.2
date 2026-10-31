@@ -42,7 +42,7 @@ public class ObsidilithStructureRepair implements StructureRepair{
             levelEventScheduler.addEvent(
                     new TimedEvent(
                             () -> {
-                                level.playSound(null, topCenter, SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1.0f, SoundUtils.randomPitch(level.random));
+                                level.playSound(null, topCenter, SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1.0f, SoundUtils.randomPitch(level.getRandom()));
 
                                 for (Vec3 pos : ObsidilithUtils.circlePos)
                                     level.removeBlock(new BlockPos((int) pos.x, y1, (int) pos.z).offset(topCenter), false);
@@ -71,6 +71,6 @@ public class ObsidilithStructureRepair implements StructureRepair{
 
     
     public static void handleObsidilithRevivePacket(Vec3 pos, ClientLevel level) {
-        ObsidilithEffectHandler.spawnPillarParticles(pos, CapabilityUtils.getLevelEventScheduler(level));
+        ObsidilithEffectHandler.spawnPillarParticles(pos, level, CapabilityUtils.getLevelEventScheduler(level));
     }
 }

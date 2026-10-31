@@ -2,7 +2,6 @@ package com.cerbon.bosses_of_mass_destruction.entity.util;
 
 import com.cerbon.bosses_of_mass_destruction.entity.damage.IDamageHandler;
 import com.cerbon.cerbons_api.api.general.event.EventScheduler;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerBossEvent;
@@ -15,6 +14,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,49 +92,6 @@ public abstract class BaseEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-        if (bossBar != null)
-            bossBar.setProgress(this.getHealth() / this.getMaxHealth());
-    }
-
-    @Override
-    public void load(@NotNull CompoundTag compound) {
-        super.load(compound);
-        if (hasCustomName() && bossBar != null)
-            bossBar.setName(this.getDisplayName());
-
-        if (nbtHandler != null)
-            nbtHandler.fromTag(compound);
-    }
-
-    @Override
-    public void setCustomName(@Nullable Component name) {
-        super.setCustomName(name);
-        if (bossBar != null)
-            bossBar.setName(this.getDisplayName());
-    }
-
-    @Override
-    public void startSeenByPlayer(@NotNull ServerPlayer serverPlayer) {
-        super.startSeenByPlayer(serverPlayer);
-        if (bossBar != null)
-            bossBar.addPlayer(serverPlayer);
-    }
-
-    @Override
-    public void stopSeenByPlayer(@NotNull ServerPlayer serverPlayer) {
-        super.stopSeenByPlayer(serverPlayer);
-        if (bossBar != null)
-            bossBar.removePlayer(serverPlayer);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-    }
-
-    @Override
     public void handleEntityEvent(byte id) {
         if (entityEventHandler != null)
             entityEventHandler.handleEntityEvent(id);
@@ -154,18 +112,18 @@ public abstract class BaseEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(@NotNull ServerLevel serverLevel, @NotNull DamageSource source, float amount) {
         EntityStats stats = new EntityStats(this);
         IDamageHandler handler = damageHandler;
 
-        if (!level().isClientSide() && handler != null)
+        if (handler != null)
             handler.beforeDamage(stats, source, amount);
 
         boolean result = handler != null
-                ? handler.shouldDamage(this, source, amount) && super.hurt(source, amount)
-                : super.hurt(source, amount);
+                ? handler.shouldDamage(this, source, amount) && super.hurtServer(serverLevel, source, amount)
+                : super.hurtServer(serverLevel, source, amount);
 
-        if (!level().isClientSide() && handler != null)
+        if (handler != null)
             handler.afterDamage(stats, source, amount, result);
 
         return result;
@@ -185,9 +143,10 @@ public abstract class BaseEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    public @NotNull CompoundTag saveWithoutId(@NotNull CompoundTag compound) {
-        CompoundTag superCompound = super.saveWithoutId(compound);
-        return nbtHandler != null ? nbtHandler.toTag(superCompound) : superCompound;
+    public void saveWithoutId(@NotNull ValueOutput output) {
+        super.saveWithoutId(output);
+        if (nbtHandler != null)
+            nbtHandler.toTag(output);
     }
 
     public Vec3 safeGetTargetPos(){
@@ -202,4 +161,3 @@ public abstract class BaseEntity extends PathfinderMob implements GeoEntity {
         return animationFactory;
     }
 }
-

@@ -21,12 +21,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class BrimstoneNectarItem extends Item {
     private final List<StructureRepair> structureRepairs;
@@ -37,8 +39,9 @@ public class BrimstoneNectarItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.bosses_of_mass_destruction.brimstone_nectar.tooltip").withStyle(ChatFormatting.DARK_GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipConsumer, TooltipFlag tooltipFlag) {
+        tooltipConsumer.accept(Component.translatable("item.bosses_of_mass_destruction.brimstone_nectar.tooltip").withStyle(ChatFormatting.DARK_GRAY));
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipConsumer, tooltipFlag);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class BrimstoneNectarItem extends Item {
             if (!structuresToRepair.isEmpty()){
                 scheduleStructureRepair(serverLevel, structuresToRepair, usePos);
                 playSound(serverLevel, user);
-                user.getCooldowns().addCooldown(this, 80);
+                user.getCooldowns().addCooldown(itemStack, 80);
                 Dispatcher.sendToClientsLoadingPos(new SendVec3S2CPacket(user.position(), VecId.BrimstoneParticleEffect.ordinal()), serverLevel, user.position());
 
                 if (!user.getAbilities().instabuild)
@@ -81,7 +84,7 @@ public class BrimstoneNectarItem extends Item {
     }
 
     private StructureStart getStructureStart(ServerLevel level, BlockPos blockPos, StructureRepair it){
-        return level.structureManager().getStructureAt(blockPos, level.structureManager().registryAccess().registryOrThrow(Registries.STRUCTURE).getOrThrow(it.associatedStructure()));
+        return level.structureManager().getStructureAt(blockPos, level.structureManager().registryAccess().lookupOrThrow(Registries.STRUCTURE).getOrThrow(it.associatedStructure()).value());
     }
 
     private void playSound(Level level, Player user){

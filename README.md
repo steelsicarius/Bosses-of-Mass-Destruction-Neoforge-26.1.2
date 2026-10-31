@@ -29,15 +29,15 @@ This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 
   - `EventBusSubscriber.bus` parameter removed
   - GeckoLib 5.5.2 API changes (PlayState, AnimationStateHandler, GeoCube package, etc.)
 
-### Remaining Work (~200 compilation errors)
-- Renderer classes need complete rewrite for Minecraft 26.1.2 render state system
-  - `BlockEntityRenderer<T>` → `BlockEntityRenderer<T, R extends BlockEntityRenderState>`
-  - `EntityRenderer<T>` → `EntityRenderer<T, R extends EntityRenderState>`
-  - Old `render(PoseStack, ...)` methods replaced by `submit(RenderState, ...)`
-- Block entity `loadAdditional`/`saveAdditional` method signatures changed
-- Block `updateShape` method signature changed
-- `ChunkPos` record constructor and field access changes
-- Various other Minecraft 26.1.2 API changes
+  - GeckoLib 5.5.2 API changes (PlayState, AnimationStateHandler, GeoCube package, etc.)
+
+### Compilation
+- `./gradlew compileJava` now passes with BUILD SUCCESSFUL (0 errors)
+- Remaining work:
+  - CERBONs API particle system (TextureSheetParticle removed) - particles stubbed out
+  - Cloth Config AutoConfig API updated to AutoConfigClient.getConfigScreen
+  - Food effects removed (FoodProperties.Builder.effect() no longer exists)
+  - Client-side particle renderers need new particle system implementation
 
 ### Note on Parchment Mappings
 

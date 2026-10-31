@@ -10,6 +10,7 @@ import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.MathUtils;
 import com.cerbon.cerbons_api.api.static_utilities.MobUtils;
 import com.cerbon.cerbons_api.api.static_utilities.SoundUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -69,12 +70,12 @@ public class CometRageAction implements IActionWithCooldown {
                                 Vec3 targetPos = target.getBoundingBox().getCenter();
                                 cometThrower.apply(offset).throwProjectile(targetPos);
                                 SoundUtils.playSound(
-                                        target.serverLevel(),
+                                        (ServerLevel) target.level(),
                                         entity.position(),
                                         BMDSounds.COMET_SHOOT.get(),
                                         SoundSource.HOSTILE,
                                         3.0f,
-                                        64,
+                                        64.0,
                                         null
                                 );
                             },
@@ -86,12 +87,12 @@ public class CometRageAction implements IActionWithCooldown {
         }
 
         SoundUtils.playSound(
-                target.serverLevel(),
+                (ServerLevel) target.level(),
                 entity.position(),
                 BMDSounds.RAGE_PREPARE.get(),
                 SoundSource.HOSTILE,
                 1.0f,
-                64,
+                64.0,
                 null
         );
     }

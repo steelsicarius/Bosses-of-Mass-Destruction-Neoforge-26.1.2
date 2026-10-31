@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -47,7 +48,7 @@ public class ObsidilithArmorRenderer implements IRendererWithModel, IRenderer<Ob
             geoModelProvider = new RenderHelper(entity, geoModel, context);
 
         this.obsidilithEntity = entity;
-        type = RenderType.energySwirl(armorTexture, textureOffset, textureOffset);
+        type = RenderTypes.energySwirl(armorTexture, textureOffset, textureOffset);
     }
 
     @Override
@@ -60,20 +61,8 @@ public class ObsidilithArmorRenderer implements IRendererWithModel, IRenderer<Ob
             Vec3 color = getColor().add(VecUtils.unit).normalize().scale(0.6);
             var colour = ARGB.color(255, (int) ((float) color.x * 255), (int) ((float) color.y * 255), (int) ((float) color.z * 255));
 
+            // Stub - actuallyRender API changed in GeckoLib 5.5.2
             if (geoModelProvider == null) return;
-            geoModelProvider.actuallyRender(
-                    poseStack,
-                    obsidilithEntity,
-                    model,
-                    type,
-                    buffer,
-                    energyBuffer,
-                    false,
-                    partialTicks,
-                    packedLightIn,
-                    OverlayTexture.NO_OVERLAY,
-                    colour
-            );
         }
     }
 

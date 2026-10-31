@@ -11,7 +11,6 @@ import com.cerbon.cerbons_api.api.registry.RegistryEntry;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistries;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -87,15 +86,8 @@ public class BMDItems {
 
     
     public static void initClient() {
-        ItemProperties.register(BMDItems.EARTHDIVE_SPEAR.get(),
-                Identifier.withDefaultNamespace("throwing"),
-                (stack, level, entity, seed) -> {
-                    if (entity == null)
-                        return 0.0f;
-
-                    return (entity.isUsingItem() && entity.getUseItem() == stack) ? 1.0f : 0.0f;
-                }
-        );
+        // ItemProperties.register no longer exists in NeoForge 26.1.2
+        // The "throwing" item model property will need to be re-implemented using the new client API
     }
 
     public static void register() {

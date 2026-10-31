@@ -36,7 +36,7 @@ public class PlaceS2CPacket {
         PlaceS2CPacket packet = ctx.message();
         Minecraft client = Minecraft.getInstance();
 
-        client.execute(() -> VoidBlossomBlock.handleVoidBlossomPlace(packet.pos));
+        client.execute(() -> VoidBlossomBlock.handleVoidBlossomPlace(client.level, packet.pos));
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {

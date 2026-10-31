@@ -69,7 +69,7 @@ public class BladeAction implements IActionWithCooldown {
                     }
             );
 
-            SoundUtils.playSound(((ServerPlayer) target).serverLevel(), entity.position(), BMDSounds.PETAL_BLADE.get(), SoundSource.HOSTILE, 3.0f, SoundUtils.randomPitch(target.getRandom()), 64.0, null);
+            SoundUtils.playSound(((ServerPlayer) target).level(), entity.position(), BMDSounds.PETAL_BLADE.get(), SoundSource.HOSTILE, 3.0f, SoundUtils.randomPitch(target.getRandom()), 64.0, null);
             MathUtils.lineCallback(lineStart, lineEnd, 11, (vec3, integer) -> projectileThrower.throwProjectile(vec3));
         };
 

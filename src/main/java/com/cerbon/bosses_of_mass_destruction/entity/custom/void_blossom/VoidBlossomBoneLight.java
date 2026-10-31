@@ -14,8 +14,8 @@ public class VoidBlossomBoneLight implements IBoneLight, IRenderer<VoidBlossomEn
 
     @Override
     public int getLightForBone(GeoBone bone, int packedLight) {
-        if (bone.getName().contains("Spike") || bone.getName().contains("Thorn") || bone.getName().contains("FlowerCenter"))
-            return IBoneLight.fullbright;
+        if (bone.name().contains("Spike") || bone.name().contains("Thorn") || bone.name().contains("FlowerCenter"))
+            return 15728880;
         else
             return packedLight;
     }

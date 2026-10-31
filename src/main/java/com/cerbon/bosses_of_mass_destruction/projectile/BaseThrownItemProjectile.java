@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -22,7 +23,7 @@ public abstract class BaseThrownItemProjectile extends ThrowableItemProjectile {
     }
 
     public BaseThrownItemProjectile(EntityType<? extends ThrowableItemProjectile> entityType, LivingEntity livingEntity, Level level, Predicate<EntityHitResult> collisionPredicate) {
-        super(entityType, livingEntity, level);
+        super(entityType, livingEntity, level, new ItemStack(Items.SNOWBALL));
         this.entityCollisionPredicate = collisionPredicate;
     }
 

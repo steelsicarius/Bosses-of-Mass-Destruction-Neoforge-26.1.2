@@ -52,7 +52,7 @@ public class CometAction implements IActionWithCooldown {
     public int perform() {
         Entity target = entity.getTarget();
         if (!(target instanceof ServerPlayer)) return cometThrowCooldown;
-        performCometThrow(((ServerPlayer) target).serverLevel());
+        performCometThrow(((ServerPlayer) target).level());
         return cometThrowCooldown;
     }
 

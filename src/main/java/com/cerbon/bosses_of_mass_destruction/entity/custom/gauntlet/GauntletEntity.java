@@ -1,5 +1,7 @@
 package com.cerbon.bosses_of_mass_destruction.entity.custom.gauntlet;
 
+import java.util.UUID;
+
 import com.cerbon.bosses_of_mass_destruction.config.mob.GauntletConfig;
 import com.cerbon.bosses_of_mass_destruction.entity.damage.CompositeDamageHandler;
 import com.cerbon.bosses_of_mass_destruction.entity.damage.DamageMemory;
@@ -63,7 +65,6 @@ public class GauntletEntity extends BaseEntity implements MultipartAwareEntity {
                 (byte) 3, new AnimationHolder.Animation("death", "idle")
         ), GauntletAttacks.stopAttackAnimation, 0);
 
-        noCulling = true;
         laserHandler.initDataTracker();
         energyShieldHandler.initDataTracker();
         damageHandler = new CompositeDamageHandler(hitboxHelper, gauntletGoalHandler, damageMemory);
@@ -71,7 +72,7 @@ public class GauntletEntity extends BaseEntity implements MultipartAwareEntity {
         dataAccessorHandler = new CompositeDataAccessorHandler(laserHandler, energyShieldHandler);
         clientTick = laserHandler;
         serverTick = serverLevel -> {if (getTarget() == null) heal(mobConfig.idleHealingPerTick);};
-        bossBar = new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_6);
+        bossBar = new ServerBossEvent(UUID.randomUUID(), getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_6);
         mobEffectHandler = new EffectsImmunity(MobEffects.WITHER.value(), MobEffects.POISON.value());
         moveHandler = gauntletGoalHandler;
         nbtHandler = gauntletGoalHandler;
@@ -115,7 +116,7 @@ public class GauntletEntity extends BaseEntity implements MultipartAwareEntity {
     }
 
     @Override
-    public boolean causeFallDamage(float fallDistance, float multiplier, @NotNull DamageSource source) {
+    public boolean causeFallDamage(double fallDistance, float multiplier, @NotNull DamageSource source) {
         return false;
     }
 

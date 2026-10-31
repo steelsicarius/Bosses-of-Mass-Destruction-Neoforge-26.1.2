@@ -76,7 +76,7 @@ public class RiftBurst {
         eventScheduler.addEvent(
                 new TimedEvent(
                         () -> {
-                            RandomSource rand = serverLevel.random;
+                            RandomSource rand = serverLevel.getRandom();
                             Vec3 columVel = VecUtils.yAxis.scale(rand.nextDouble() + 1).scale(0.25);
                             AtomicInteger ticks = new AtomicInteger();
                             eventScheduler.addEvent(

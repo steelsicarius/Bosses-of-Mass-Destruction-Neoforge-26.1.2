@@ -13,6 +13,7 @@ import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +34,7 @@ public class GauntletBlackstoneBlock extends Block {
         if (level.isClientSide()) return state;
 
         for (Direction dir : List.of(Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH)){
-            BlockPos centerPos = pos.offset(dir.getNormal());
+            BlockPos centerPos = pos.offset(dir.getUnitVec3i());
             Block centerBlock = level.getBlockState(centerPos).getBlock();
 
             if (centerBlock == this){
@@ -46,10 +47,10 @@ public class GauntletBlackstoneBlock extends Block {
 
     private void spawnGauntlet(BlockPos centerPos, Level level){
         Vec3 spawnPos = VecUtils.asVec3(centerPos).add(new Vec3(0.5, -0.5, 0.5));
-        GauntletEntity entity = BMDEntities.GAUNTLET.get().create(level);
+        GauntletEntity entity = BMDEntities.GAUNTLET.get().create(level, EntitySpawnReason.MOB_SUMMONED);
 
         if (entity != null){
-            entity.absMoveTo(spawnPos.x, spawnPos.y, spawnPos.z);
+            entity.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
             level.addFreshEntity(entity);
         }
 

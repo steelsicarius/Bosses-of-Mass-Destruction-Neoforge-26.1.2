@@ -34,6 +34,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -118,8 +119,7 @@ public class BMDEntities {
                             lichEntity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/lich.geo.json"),
                             entity -> texture,
                             Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/lich.animation.json"),
-                            new LichCodeAnimations(),
-                            RenderType::entityCutoutNoCull
+                            new LichCodeAnimations()
                     ),
                     new BoundedLighting<>(5),
                     new LichBoneLight(),
@@ -136,8 +136,7 @@ public class BMDEntities {
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/obsidilith.geo.json"),
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith.png"),
                     Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/obsidilith.animation.json"),
-                    (animatable, data, geoModel) -> {},
-                    RenderType::entityCutout
+                    (animatable, data, geoModel) -> {}
             );
             ObsidilithArmorRenderer armorRenderer = new ObsidilithArmorRenderer(modelProvider, context);
             return new SimpleLivingGeoRenderer<>(
@@ -159,8 +158,7 @@ public class BMDEntities {
                                 geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/comet.geo.json"),
                                 entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/comet.png"),
                                 Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/comet.animation.json"),
-                                new CometCodeAnimations(),
-                                RenderType::entityCutout
+                                new CometCodeAnimations()
                         ),
                         new FullRenderLight<>(),
                         null,
@@ -179,7 +177,7 @@ public class BMDEntities {
         EntityRenderers.register(CHARGED_ENDER_PEARL.get(), ThrownItemRenderer::new);
 
         Identifier missileTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/blue_magic_missile.png");
-        RenderType magicMissileRenderType = RenderType.entityCutoutNoCull(missileTexture);
+        RenderType magicMissileRenderType = RenderTypes.entityCutout(missileTexture);
         EntityRenderers.register(MAGIC_MISSILE.get(), context ->
                 new SimpleEntityRenderer<>(context,
                         new CompositeRenderer<>(
@@ -196,8 +194,7 @@ public class BMDEntities {
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/gauntlet.geo.json"),
                     new GauntletTextureProvider(),
                     Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/gauntlet.animation.json"),
-                    new GauntletCodeAnimations(),
-                    RenderType::entityCutout
+                    new GauntletCodeAnimations()
             );
             GauntletEnergyRenderer energyRenderer = new GauntletEnergyRenderer(modelProvider, context);
             GauntletOverlay overlayOverride = new GauntletOverlay();
@@ -227,8 +224,7 @@ public class BMDEntities {
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/void_blossom.geo.json"),
                     entity -> texture,
                     Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/void_blossom.animation.json"),
-                    new VoidBlossomCodeAnimations(),
-                    RenderType::entityCutout
+                    new VoidBlossomCodeAnimations()
             );
             VoidBlossomBoneLight boneLight = new VoidBlossomBoneLight();
             NoRedOnDeathOverlay overlay = new NoRedOnDeathOverlay();
@@ -252,8 +248,7 @@ public class BMDEntities {
                             geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/comet.geo.json"),
                             entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/spore.png"),
                             Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/comet.animation.json"),
-                            new SporeCodeAnimations(),
-                            RenderType::entityCutout),
+                            new SporeCodeAnimations()),
                     new FullRenderLight<>(),
                     null,
                     new CompositeRenderer<>(
@@ -275,7 +270,7 @@ public class BMDEntities {
         });
 
         Identifier petalTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/petal_blade.png");
-        RenderType petalBladeRenderType = RenderType.entityCutoutNoCull(petalTexture);
+        RenderType petalBladeRenderType = RenderTypes.entityCutout(petalTexture);
         EntityRenderers.register(PETAL_BLADE.get(), context ->
                 new SimpleEntityRenderer<>(context,
                         new CompositeRenderer<>(

@@ -48,7 +48,7 @@ public class VoidBlossomStructureRepair implements StructureRepair{
 
     private BlockPos getCenterSpawn(StructureStart structureStart, ServerLevel level){
         BlockPos pos = structureStart.getBoundingBox().getCenter();
-        return BossBlockDecorator.bossBlockOffset(pos, level.getMinBuildHeight());
+        return BossBlockDecorator.bossBlockOffset(pos, level.getMinY());
     }
 
     

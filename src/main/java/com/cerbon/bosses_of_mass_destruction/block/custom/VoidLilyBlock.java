@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.function.Consumer;
 
 import java.util.List;
 
@@ -40,9 +41,5 @@ public class VoidLilyBlock extends FlowerBlock implements EntityBlock {
         };
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("block.bosses_of_mass_destruction.void_lily.tooltip").withStyle(ChatFormatting.DARK_GRAY));
 
-    }
 }

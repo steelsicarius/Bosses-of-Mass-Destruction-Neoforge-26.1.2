@@ -13,12 +13,14 @@ import com.cerbon.cerbons_api.api.static_utilities.Vec3Colors;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import com.geckolib.animatable.GeoBlockEntity;
@@ -46,11 +48,7 @@ public class LevitationBlockEntity extends ChunkCacheBlockEntity implements GeoB
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(
-                new AnimationController<>(
-                        this,
-                        0,
-                        AnimationUtils.createIdlePredicate("rotate")
-                )
+                new AnimationController<LevitationBlockEntity>("rotate", 0, AnimationUtils.createIdlePredicate("rotate"))
         );
     }
 
@@ -86,7 +84,7 @@ public class LevitationBlockEntity extends ChunkCacheBlockEntity implements GeoB
 
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++)
-                chunksToCheck.add(new ChunkPos(player.blockPosition().offset(new ChunkPos(x, z).getBlockAt(0, 0, 0))));
+                chunksToCheck.add(ChunkPos.containing(player.blockPosition().offset(x * 16, 0, z * 16)));
         }
 
         boolean hasLevitationBlock = chunksToCheck.stream().anyMatch(chunkPos -> {
@@ -126,7 +124,9 @@ public class LevitationBlockEntity extends ChunkCacheBlockEntity implements GeoB
     }
 
     private static AABB getAffectingBox(Level level, Vec3 pos){
-        return new AABB(pos.x, level.getMinBuildHeight(), pos.z, (pos.x + 1), level.getHeight(), (pos.z + 1)).inflate(tableOfElevationRadius, 0.0, tableOfElevationRadius);
+        int x = (int) pos.x;
+        int z = (int) pos.z;
+        return new AABB(pos.x, -64, pos.z, pos.x + 1, level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z), pos.z + 1).inflate(tableOfElevationRadius, 0.0, tableOfElevationRadius);
     }
 
     @Override

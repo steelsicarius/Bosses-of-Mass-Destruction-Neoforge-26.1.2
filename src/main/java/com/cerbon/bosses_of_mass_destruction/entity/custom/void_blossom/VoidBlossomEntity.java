@@ -1,5 +1,7 @@
 package com.cerbon.bosses_of_mass_destruction.entity.custom.void_blossom;
 
+import java.util.UUID;
+
 import com.cerbon.bosses_of_mass_destruction.config.mob.VoidBlossomConfig;
 import com.cerbon.bosses_of_mass_destruction.entity.ai.TargetSwitcher;
 import com.cerbon.bosses_of_mass_destruction.entity.ai.goals.ActionGoal;
@@ -55,8 +57,6 @@ public class VoidBlossomEntity extends BaseEntity implements MultipartAwareEntit
 
     public VoidBlossomEntity(EntityType<? extends PathfinderMob> entityType, Level level, VoidBlossomConfig mobConfig) {
         super(entityType, level);
-        noCulling = true;
-
         this.animationHolder = new AnimationHolder(
                 this, Map.of(
                 VoidBlossomAttacks.spikeAttack, new AnimationHolder.Animation("spike", "idle"),
@@ -77,7 +77,7 @@ public class VoidBlossomEntity extends BaseEntity implements MultipartAwareEntit
         BooleanFlag shouldSpawnBlossoms = new BooleanFlag();
         StagedDamageHandler hpDetector = new StagedDamageHandler(hpMilestones, shouldSpawnBlossoms::flag);
 
-        bossBar = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_12);
+        bossBar = new ServerBossEvent(UUID.randomUUID(), this.getDisplayName(), BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_12);
 
         this.clientSpikeHandler = new VoidBlossomClientSpikeHandler();
         clientTick = clientSpikeHandler;

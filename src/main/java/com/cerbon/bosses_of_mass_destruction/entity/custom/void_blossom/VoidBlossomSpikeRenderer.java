@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,7 +20,7 @@ import java.util.function.Function;
 
 public class VoidBlossomSpikeRenderer implements IRenderer<VoidBlossomEntity> {
     private final Identifier spikeTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/void_blossom_spike.png");
-    private final RenderType type = RenderType.entityCutoutNoCull(spikeTexture);
+    private final RenderType type = RenderTypes.entityCutout(spikeTexture);
 
     @Override
     public void render(VoidBlossomEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {

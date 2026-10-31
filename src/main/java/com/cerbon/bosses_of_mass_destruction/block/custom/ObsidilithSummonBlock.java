@@ -10,10 +10,10 @@ import com.cerbon.cerbons_api.api.general.particle.ClientParticleBuilder;
 import com.cerbon.cerbons_api.api.static_utilities.CapabilityUtils;
 import com.cerbon.cerbons_api.api.static_utilities.RandomUtils;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -61,12 +61,12 @@ public class ObsidilithSummonBlock extends Block {
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(@NotNull BlockState state) {
+    protected boolean hasAnalogOutputSignal(@NotNull BlockState state) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState state, @NotNull Level level, @NotNull BlockPos pos) {
+    protected int getAnalogOutputSignal(BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Direction direction) {
         return state.getValue(eye) ? 15 : 0;
     }
 
@@ -122,10 +122,9 @@ public class ObsidilithSummonBlock extends Block {
                 new TimedEvent(
                         () -> {
                             level.setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
-                            ObsidilithEntity obsidilithEntity = BMDEntities.OBSIDILITH.get().create(level);
+                            ObsidilithEntity obsidilithEntity = BMDEntities.OBSIDILITH.get().create(level, EntitySpawnReason.MOB_SUMMONED);
                             if (obsidilithEntity != null){
-                                obsidilithEntity.syncPacketPositionCodec(pos.x, pos.y, pos.z);
-                                obsidilithEntity.absMoveTo(pos.x, pos.y, pos.z);
+                                obsidilithEntity.setPos(pos.x, pos.y, pos.z);
                                 level.addFreshEntity(obsidilithEntity);
                             }
                         },

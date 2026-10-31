@@ -26,7 +26,7 @@ public class BMDUtils {
     }
 
     public static BlockPos findGroundBelow(Level level, BlockPos pos, Function<BlockPos, Boolean> isOpenBlock) {
-        int bottomY = level.getMinBuildHeight();
+        int bottomY = level.getMinY();
         for (int i = pos.getY(); i >= bottomY + 1; i--) {
             BlockPos tempPos = new BlockPos(pos.getX(), i, pos.getZ());
 
@@ -42,7 +42,7 @@ public class BMDUtils {
     }
 
     public static ConfiguredFeature<?, ?> getConfiguredFeature(LevelReader levelReader, ResourceKey<ConfiguredFeature<?, ?>> key) {
-        return levelReader.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key);
+        return levelReader.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(key).value();
     }
 
 }

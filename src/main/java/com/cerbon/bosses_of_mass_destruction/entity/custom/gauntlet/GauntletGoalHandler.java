@@ -8,9 +8,10 @@ import com.cerbon.bosses_of_mass_destruction.entity.util.IEntityStats;
 import com.cerbon.bosses_of_mass_destruction.entity.util.IMoveHandler;
 import com.cerbon.bosses_of_mass_destruction.entity.util.INbtHandler;
 import com.cerbon.cerbons_api.api.general.event.EventScheduler;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -58,15 +59,15 @@ public class GauntletGoalHandler implements INbtHandler, IMoveHandler, IDamageHa
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public ValueOutput toTag(ValueOutput tag) {
         tag.putBoolean("isAggroed", isAggroed);
         return tag;
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        if (tag.contains("isAggroed")){
-            isAggroed = tag.getBoolean("isAggroed");
+    public void fromTag(ValueInput tag) {
+        if (tag.child("isAggroed").isPresent()){
+            isAggroed = tag.getBooleanOr("isAggroed", false);
             if (isAggroed) addGoals();
         }
     }

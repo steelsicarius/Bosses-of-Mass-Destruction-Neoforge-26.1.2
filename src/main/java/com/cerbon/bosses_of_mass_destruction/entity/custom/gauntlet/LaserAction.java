@@ -113,7 +113,7 @@ public class LaserAction implements IActionWithCooldown {
 
         for (LivingEntity hitEntity : entitiesHit){
             entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(laserDamageModifier, -0.25, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-            entity.doHurtTarget(hitEntity);
+            entity.doHurtTarget((ServerLevel) entity.level(), hitEntity);
             entity.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(laserDamageModifier);
         }
     }

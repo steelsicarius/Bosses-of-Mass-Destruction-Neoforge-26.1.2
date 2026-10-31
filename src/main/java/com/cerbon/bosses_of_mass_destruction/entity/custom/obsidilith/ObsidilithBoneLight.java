@@ -15,15 +15,15 @@ public class ObsidilithBoneLight implements IBoneLight, IRenderer<ObsidilithEnti
 
     @Override
     public int getLightForBone(GeoBone bone, int packedLight) {
-        if (bone.getName().equals("middle_runes") && entity != null && entity.currentAttack > 0)
-            return IBoneLight.fullbright;
+        if (bone.name().equals("middle_runes") && entity != null && entity.currentAttack > 0)
+            return 15728880;
         else
             return packedLight;
     }
 
     @Override
     public Vector4f getColorForBone(GeoBone bone, Vector4f rgbaColor) {
-        if (bone.getName().equals("middle_runes")) {
+        if (bone.name().equals("middle_runes")) {
             return switch (entity.currentAttack) {
                 case ObsidilithUtils.burstAttackStatus -> colorToVec4(Vec3Colors.ORANGE);
                 case ObsidilithUtils.waveAttackStatus -> colorToVec4(Vec3Colors.RED);

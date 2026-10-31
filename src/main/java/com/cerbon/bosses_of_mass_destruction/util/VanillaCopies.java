@@ -24,7 +24,7 @@ public class VanillaCopies {
             Quaternionf rotation
     ) {
         poseStack.pushPose();
-        poseStack.mulPose(dispatcher.cameraOrientation());
+        poseStack.mulPose(dispatcher.camera.rotation());
         poseStack.mulPose(new Quaternionf().rotateY((float) Math.toRadians(180)));
         poseStack.mulPose(rotation);
         PoseStack.Pose pose = poseStack.last();

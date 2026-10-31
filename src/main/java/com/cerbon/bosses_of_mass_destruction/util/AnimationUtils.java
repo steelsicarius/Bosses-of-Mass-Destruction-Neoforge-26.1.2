@@ -9,7 +9,7 @@ import com.geckolib.animation.RawAnimation;
 public class AnimationUtils {
     public static <T extends GeoAnimatable> AnimationController.AnimationStateHandler<T> createIdlePredicate(String animationName) {
         return animationState -> {
-            animationState.getController().setAnimation(
+            animationState.controller().setAnimation(
                     RawAnimation.begin().thenLoop(animationName)
             );
             return PlayState.CONTINUE;

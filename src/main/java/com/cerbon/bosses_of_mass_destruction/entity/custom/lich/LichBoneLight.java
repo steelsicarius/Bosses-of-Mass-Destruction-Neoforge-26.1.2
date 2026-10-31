@@ -11,7 +11,7 @@ public class LichBoneLight implements IBoneLight {
     @Override
     public int getLightForBone(GeoBone bone, int packedLight) {
         List<String> boneNames = Arrays.asList("crown_crystals", "crystal", "leftEye", "rightEye");
-        return boneNames.contains(bone.getName()) ? IBoneLight.fullbright : packedLight;
+        return boneNames.contains(bone.name()) ? 15728880 : packedLight;
     }
 }
 

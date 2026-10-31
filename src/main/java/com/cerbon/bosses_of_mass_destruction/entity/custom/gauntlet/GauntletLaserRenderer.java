@@ -8,12 +8,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class GauntletLaserRenderer implements IRenderer<GauntletEntity> {
     private final Identifier laserTexture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/gauntlet_beam.png");
-    private final RenderType type = RenderType.entityCutoutNoCull(laserTexture);
+    private final RenderType type = RenderTypes.entityCutout(laserTexture);
 
     @Override
     public void render(GauntletEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {

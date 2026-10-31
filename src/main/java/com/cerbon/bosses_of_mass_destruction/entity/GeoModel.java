@@ -41,4 +41,8 @@ public class GeoModel<T extends GeoAnimatable> extends com.geckolib.model.GeoMod
     public BakedGeoModel getBakedModel(Identifier modelLocation) {
         return super.getBakedModel(modelLocation);
     }
+
+    public BakedGeoModel getAnimationBakedModel() {
+        return getBakedModel(animationLocation);
+    }
 }

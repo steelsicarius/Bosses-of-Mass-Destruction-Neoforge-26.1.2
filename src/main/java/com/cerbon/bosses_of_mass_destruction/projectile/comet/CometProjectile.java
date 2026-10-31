@@ -3,6 +3,7 @@ package com.cerbon.bosses_of_mass_destruction.projectile.comet;
 import com.cerbon.bosses_of_mass_destruction.entity.BMDEntities;
 import com.cerbon.bosses_of_mass_destruction.projectile.BaseThrownItemProjectile;
 import com.cerbon.bosses_of_mass_destruction.projectile.util.ExemptEntities;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -47,9 +48,9 @@ public class CometProjectile extends BaseThrownItemProjectile implements GeoEnti
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
+    public boolean hurtServer(@NotNull ServerLevel serverLevel, @NotNull DamageSource source, float amount) {
         onImpact();
-        return super.hurt(source, amount);
+        return super.hurtServer(serverLevel, source, amount);
     }
 
     private void onImpact(){

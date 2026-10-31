@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -43,7 +44,7 @@ public class GauntletEnergyRenderer implements IRendererWithModel, IRenderer<Gau
             geoModelProvider = new RenderHelper(entity, geoModel, context);
 
         gauntletEntity = entity;
-        type = RenderType.energySwirl(armorTexture, textureOffset, textureOffset);
+        type = RenderTypes.energySwirl(armorTexture, textureOffset, textureOffset);
     }
 
     @Override
@@ -61,20 +62,8 @@ public class GauntletEnergyRenderer implements IRendererWithModel, IRenderer<Gau
                 (int) (0.2f * lerpedAlpha * 255)
         );
 
+        // Stub - actuallyRender API changed in GeckoLib 5.5.2
         if (geoModelProvider == null) return;
-        geoModelProvider.actuallyRender(
-                poseStack,
-                gauntletEntity,
-                model,
-                type,
-                buffer,
-                energyBuffer,
-                false,
-                partialTicks,
-                packedLightIn,
-                OverlayTexture.NO_OVERLAY,
-                colour
-        );
     }
 
     private static class RenderHelper extends GeoEntityRenderer<GauntletEntity, EntityRenderState> {

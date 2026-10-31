@@ -50,7 +50,7 @@ public class SpikeAction implements IActionWithCooldown {
     private void placeSpikes(ServerPlayer target){
         Spikes riftBurst = new Spikes(
                 entity,
-                target.serverLevel(),
+                (ServerLevel) target.level(),
                 BMDParticles.VOID_BLOSSOM_SPIKE_INDICATOR.get(),
                 indicatorDelay,
                 eventScheduler,
@@ -58,12 +58,12 @@ public class SpikeAction implements IActionWithCooldown {
         );
 
         SoundUtils.playSound(
-                target.serverLevel(),
+                (ServerLevel) target.level(),
                 entity.position(),
                 BMDSounds.VOID_BLOSSOM_BURROW.get(),
                 SoundSource.HOSTILE,
                 1.5f,
-                32,
+                32.0,
                 null
         );
 
@@ -90,12 +90,12 @@ public class SpikeAction implements IActionWithCooldown {
                             () -> {
                                 Vec3 placement = ObsidilithUtils.approximatePlayerNextPosition(BMDCapabilities.getPlayerPositions(target), target.position());
                                 SoundUtils.playSound(
-                                        target.serverLevel(),
+                                        (ServerLevel) target.level(),
                                         placement,
                                         BMDSounds.VOID_SPIKE_INDICATOR.get(),
                                         SoundSource.HOSTILE,
                                         1.0f,
-                                        32,
+                                        32.0,
                                         null
                                 );
 
@@ -107,12 +107,12 @@ public class SpikeAction implements IActionWithCooldown {
                                         new TimedEvent(
                                                 () -> {
                                                     SoundUtils.playSound(
-                                                            target.serverLevel(),
+                                                            (ServerLevel) target.level(),
                                                             placement,
                                                             BMDSounds.VOID_BLOSSOM_SPIKE.get(),
                                                             SoundSource.HOSTILE,
                                                             1.2f,
-                                                            32,
+                                                            32.0,
                                                             null
                                                     );
                                                     Dispatcher.sendToClientsLoadingPos(new SpikeS2CPacket(entity.getId(), successfulSpikes), (ServerLevel) entity.level(), entity.position());

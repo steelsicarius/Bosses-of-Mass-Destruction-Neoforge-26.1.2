@@ -13,6 +13,7 @@ import com.cerbon.cerbons_api.api.static_utilities.SoundUtils;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
@@ -54,7 +55,7 @@ public class VolleyAction implements IActionWithCooldown {
     }
 
     public void performVolley(ServerPlayer target) {
-        final Optional<MobEffect> missileMobEffect = Optional.ofNullable(BuiltInRegistries.MOB_EFFECT.get(Identifier.tryParse(mobConfig.missile.mobEffectId)));
+        final Optional<MobEffect> missileMobEffect = BuiltInRegistries.MOB_EFFECT.get(Identifier.tryParse(mobConfig.missile.mobEffectId)).map(holder -> holder.value());
         final Function<Vec3, ProjectileThrower> missileThrower = getMissileThrower(missileMobEffect);
 
         eventScheduler.addEvent(
@@ -65,12 +66,12 @@ public class VolleyAction implements IActionWithCooldown {
                                 missileThrower.apply(offset).throwProjectile(targetPos.add(VecUtils.planeProject(offset, VecUtils.yAxis)));
 
                             SoundUtils.playSound(
-                                    target.serverLevel(),
+                                    (ServerLevel) target.level(),
                                     entity.position(),
                                     BMDSounds.MISSILE_SHOOT.get(),
                                     SoundSource.HOSTILE,
                                     3.0f,
-                                    64,
+                                    64.0,
                                     null
                             );
                         },
@@ -83,12 +84,12 @@ public class VolleyAction implements IActionWithCooldown {
         eventScheduler.addEvent(
                 new TimedEvent(
                         () -> SoundUtils.playSound(
-                                target.serverLevel(),
+                                (ServerLevel) target.level(),
                                 entity.position(),
                                 BMDSounds.MISSILE_PREPARE.get(),
                                 SoundSource.HOSTILE,
                                 4.0f,
-                                64,
+                                64.0,
                                 null
                         ),
                         10,

@@ -61,7 +61,7 @@ public class VoidBlossomCavernPieceGenerator implements IPieceGenerator {
         List<Pair<BlockPos, Integer>> randoms = new LinkedList<>();
         WorldgenRandom worldgenRandom = new WorldgenRandom(new LegacyRandomSource(level.getSeed()));
         NormalNoise normalNoise = NormalNoise.create(worldgenRandom, -4, 1.0);
-        double d = (double) distributionPoints / (double) outerWallDistance.getMaxValue();
+        double d = (double) distributionPoints / (double) outerWallDistance.maxInclusive();
         double airThickness = 1.0 / Math.sqrt(25.2 + d);
         double outerLayerThickness = 1.0 / Math.sqrt(30.2 + d);
 

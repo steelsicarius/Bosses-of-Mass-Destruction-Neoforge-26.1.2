@@ -9,6 +9,7 @@ import com.cerbon.cerbons_api.api.static_utilities.RandomUtils;
 import com.cerbon.cerbons_api.api.static_utilities.Vec3Colors;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -40,7 +41,7 @@ public class ChiseledStoneAltarBlock extends Block {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState state, @NotNull Level level, @NotNull BlockPos pos) {
+    protected int getAnalogOutputSignal(BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Direction direction) {
         return state.getValue(lit) ? 15 : 0;
     }
 

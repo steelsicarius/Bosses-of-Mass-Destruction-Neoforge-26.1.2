@@ -9,13 +9,15 @@ import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.ParticleUtils;
 import com.cerbon.cerbons_api.api.static_utilities.RegistryUtils;
 import com.cerbon.cerbons_api.api.static_utilities.SoundUtils;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Supplier;
@@ -30,15 +32,6 @@ public class MinionAction implements IActionWithCooldown {
     public static final int minionSummonDelay = 40;
     public static final int minionRuneToMinionSpawnDelay = 40;
     public static final String summonId = "minecraft:phantom";
-    public static final CompoundTag summonNbt;
-
-    static {
-        try {
-            summonNbt = TagParser.parseTag("{Health:14,Size:2,Attributes:[{Name:\"generic.max_health\",Base:14f}]}");
-        } catch (CommandSyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static final EntityType<?> summonEntityType = RegistryUtils.getEntityTypeByKey(summonId);
 
@@ -68,14 +61,15 @@ public class MinionAction implements IActionWithCooldown {
     }
 
     void beginSummonSingleMob(ServerPlayer target){
-        CompoundTag compoundTag = summonNbt.copy();
+        CompoundTag compoundTag = new CompoundTag();
         compoundTag.putString("id", summonId);
-        SimpleMobSpawner mobSpawner = new SimpleMobSpawner(target.serverLevel());
-        CompoundTagEntityProvider entityProvider = new CompoundTagEntityProvider(compoundTag, target.serverLevel());
+        ServerLevel serverLevel = (ServerLevel) target.level();
+        SimpleMobSpawner mobSpawner = new SimpleMobSpawner(serverLevel);
+        CompoundTagEntityProvider entityProvider = new CompoundTagEntityProvider(compoundTag, serverLevel);
         MobEntitySpawnPredicate spawnPredicate = new MobEntitySpawnPredicate(target.level());
         IMobSpawner summonCircleBeforeSpawn = (pos, summon) -> {
-            ParticleUtils.spawnParticle(target.serverLevel(), BMDParticles.MAGIC_CIRCLE.get(), pos, Vec3.ZERO, 0, 0.0);
-            SoundUtils.playSound(target.serverLevel(), pos, BMDSounds.MINION_RUNE.get(), SoundSource.HOSTILE, 1.0f, 64, null);
+            ParticleUtils.spawnParticle(serverLevel, BMDParticles.MAGIC_CIRCLE.get(), pos, Vec3.ZERO, 0, 0.0);
+            SoundUtils.playSound(serverLevel, pos, BMDSounds.MINION_RUNE.get(), SoundSource.HOSTILE, 1.0f, 64.0, null);
             eventScheduler.addEvent(
                     new TimedEvent(
                             () -> {

@@ -12,7 +12,6 @@ import com.cerbon.cerbons_api.api.general.event.EventScheduler;
 import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Minecraft;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -28,8 +27,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SoulStarItem extends Item {
 
@@ -48,8 +50,8 @@ public class SoulStarItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.bosses_of_mass_destruction.soul_star.tooltip").withStyle(ChatFormatting.DARK_GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.accept(Component.translatable("item.bosses_of_mass_destruction.soul_star.tooltip").withStyle(ChatFormatting.DARK_GRAY));
     }
 
     @Override
@@ -72,7 +74,7 @@ public class SoulStarItem extends Item {
                         BMDSounds.SOUL_STAR.get(),
                         SoundSource.NEUTRAL,
                         0.5f,
-                        SoundUtils.randomPitch(level.random)
+                        SoundUtils.randomPitch(level.getRandom())
                 );
                 return InteractionResult.PASS;
             }
@@ -154,11 +156,11 @@ public class SoulStarItem extends Item {
 
                     player.awardStat(Stats.ITEM_USED.get(this));
                     player.swing(usedHand, true);
-                    return InteractionResultHolder.success(itemStack);
+                    return InteractionResult.SUCCESS;
                 }
-                return InteractionResultHolder.pass(itemStack);
+                return InteractionResult.PASS;
             }
-            return InteractionResultHolder.consume(itemStack);
+            return InteractionResult.SUCCESS;
         }
     }
 
@@ -175,11 +177,10 @@ public class SoulStarItem extends Item {
         ).tryPlacement(200);
 
         if (!spawned){
-            LichEntity entity = BMDEntities.LICH.get().create(level);
+            LichEntity entity = BMDEntities.LICH.get().create((ServerLevel) level, EntitySpawnReason.MOB_SUMMONED);
             if (entity != null){
                 Vec3 defaultSpawnPos = spawnPos.add(VecUtils.xAxis.scale(5.0));
-                entity.syncPacketPositionCodec(defaultSpawnPos.x, defaultSpawnPos.y, defaultSpawnPos.z);
-                entity.absMoveTo(defaultSpawnPos.x, defaultSpawnPos.y, defaultSpawnPos.z);
+                entity.setPos(defaultSpawnPos.x, defaultSpawnPos.y, defaultSpawnPos.z);
                 level.addFreshEntity(entity);
             }
         }

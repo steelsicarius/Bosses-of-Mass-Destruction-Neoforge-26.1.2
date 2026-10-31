@@ -13,12 +13,14 @@ import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,22 +32,22 @@ public class VoidLilyBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains("dirX"))
-            structureDirection = new Vec3(tag.getDouble("dirX"), tag.getDouble("dirY"), tag.getDouble("dirZ"));
+    protected void loadAdditional(ValueInput tag) {
+        if (tag.child("dirX").isPresent())
+            structureDirection = new Vec3(tag.getDoubleOr("dirX", 0), tag.getDoubleOr("dirY", 0), tag.getDoubleOr("dirZ", 0));
 
-        super.loadAdditional(tag, registries);
+        super.loadAdditional(tag);
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveAdditional(@NotNull ValueOutput tag) {
         Vec3 dir = structureDirection;
         if (dir != null){
             tag.putDouble("dirX", dir.x);
             tag.putDouble("dirY", dir.y);
             tag.putDouble("dirZ", dir.z);
         }
-        super.saveAdditional(tag, registries);
+        super.saveAdditional(tag);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, VoidLilyBlockEntity entity){
@@ -62,7 +64,7 @@ public class VoidLilyBlockEntity extends BlockEntity {
     private static void setNearestStructureDirection(ServerLevel level, BlockPos pos, VoidLilyBlockEntity entity){
         BlockPos blockPos = level.findNearestMapStructure(BMDStructures.VOID_LILY_STRUCTURE_KEY, pos, 50, false);
         if (blockPos != null)
-            entity.structureDirection = VecUtils.asVec3(new BlockPos(blockPos.getX(), level.getMinBuildHeight(), blockPos.getZ()).subtract(pos)).normalize();
+            entity.structureDirection = VecUtils.asVec3(new BlockPos(blockPos.getX(), -64, blockPos.getZ()).subtract(pos)).normalize();
         else
             entity.structureDirection = VecUtils.yAxis;
     }

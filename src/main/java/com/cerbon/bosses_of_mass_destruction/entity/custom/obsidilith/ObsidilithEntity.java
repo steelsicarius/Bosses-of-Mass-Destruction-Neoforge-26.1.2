@@ -15,8 +15,8 @@ import com.cerbon.bosses_of_mass_destruction.particle.BMDParticles;
 import com.cerbon.bosses_of_mass_destruction.sound.BMDSounds;
 import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.*;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -33,6 +33,8 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,8 +66,6 @@ public class ObsidilithEntity extends BaseEntity {
         super(entityType, level);
         this.mobConfig = mobConfig;
 
-        noCulling = true;
-
         this.statusRegistry = Map.of(
                 ObsidilithUtils.burstAttackStatus, new BurstAction(this),
                 ObsidilithUtils.waveAttackStatus, new WaveAction(this),
@@ -78,7 +78,7 @@ public class ObsidilithEntity extends BaseEntity {
         this.moveLogic = new ObsidilithMoveLogic(statusRegistry, this, damageMemory);
         this.effectHandler = new ObsidilithEffectHandler(this, CapabilityUtils.getLevelEventScheduler(level));
 
-        bossBar = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.NOTCHED_12);
+        bossBar = new ServerBossEvent(UUID.randomUUID(), this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.NOTCHED_12);
         damageHandler = new CompositeDamageHandler(moveLogic, new ShieldDamageHandler(this::isShielded), damageMemory);
         mobEffectHandler = new EffectsImmunity(MobEffects.WITHER.value(), MobEffects.POISON.value());
         serverTick = new CappedHeal(this, ObsidilithUtils.hpPillarShieldMilestones, mobConfig.idleHealingPerTick);
@@ -136,11 +136,6 @@ public class ObsidilithEntity extends BaseEntity {
                         ));
             }
         }
-    }
-
-    @Override
-    public boolean canBeCollidedWith() {
-        return true;
     }
 
     @Override
@@ -212,7 +207,7 @@ public class ObsidilithEntity extends BaseEntity {
     }
 
     @Override
-    public boolean causeFallDamage(float fallDistance, float multiplier, @NotNull DamageSource source) {
+    public boolean causeFallDamage(double fallDistance, float multiplier, @NotNull DamageSource source) {
         return false;
     }
 
@@ -225,23 +220,22 @@ public class ObsidilithEntity extends BaseEntity {
     }
 
     @Override
-    public @NotNull CompoundTag saveWithoutId(@NotNull CompoundTag compound) {
+    public void saveWithoutId(@NotNull ValueOutput output) {
+        super.saveWithoutId(output);
         int[] activePillarsArray = activePillars.stream()
                 .flatMapToInt(p -> IntStream.of(p.getX(), p.getY(), p.getZ()))
                 .toArray();
-        compound.putIntArray("activePillars", activePillarsArray);
-        return super.saveWithoutId(compound);
+        output.putIntArray("activePillars", activePillarsArray);
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        super.load(compound);
-        if (compound.contains("activePillars")) {
-            int[] activePillarsArray = compound.getIntArray("activePillars");
+    protected void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.getIntArray("activePillars").ifPresent(activePillarsArray -> {
             for (int i = 0; i < activePillarsArray.length; i += 3) {
                 BlockPos pos = new BlockPos(activePillarsArray[i], activePillarsArray[i + 1], activePillarsArray[i + 2]);
                 activePillars.add(pos);
             }
-        }
+        });
     }
 }

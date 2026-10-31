@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class LevitationBlock extends BaseEntityBlock {
     public static final MapCodec<LevitationBlock> CODEC = simpleCodec(LevitationBlock::new);
@@ -36,11 +37,6 @@ public class LevitationBlock extends BaseEntityBlock {
     @Override
     protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.bosses_of_mass_destruction.levitation_block.tooltip").withStyle(ChatFormatting.DARK_GRAY));
     }
 
     @Override

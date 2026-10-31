@@ -121,7 +121,7 @@ public class SwirlPunchAction implements IActionWithCooldown {
         List<LivingEntity> collidedEntities = entity.level().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox(), livingEntity -> livingEntity != entity);
 
         for (LivingEntity target : collidedEntities){
-            entity.doHurtTarget(target);
+            entity.doHurtTarget((ServerLevel) entity.level(), target);
             target.addDeltaMovement(entity.getDeltaMovement().scale(0.5));
         }
     }

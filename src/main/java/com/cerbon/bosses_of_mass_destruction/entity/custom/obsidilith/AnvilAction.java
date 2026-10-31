@@ -51,7 +51,7 @@ public class AnvilAction implements IActionWithCooldown {
                             Vec3 teleportPos = targetPos.add(VecUtils.yAxis.scale(24.0));
                             Vec3 originalPos = actor.position();
 
-                            actor.moveTo(teleportPos.x, teleportPos.y, teleportPos.z, actor.getYRot(), actor.getXRot());
+                            actor.setPos(teleportPos.x, teleportPos.y, teleportPos.z);
                             SoundUtils.playSound(level, teleportPos, BMDSounds.OBSIDILITH_TELEPORT.get(), SoundSource.HOSTILE, 3.0f, 64, null);
 
                             for (Vec3 pos : circlePoints){
@@ -75,7 +75,7 @@ public class AnvilAction implements IActionWithCooldown {
                                                                     eventScheduler.addEvent(
                                                                             new TimedEvent(
                                                                                     () -> {
-                                                                                        actor.moveTo(originalPos.x, originalPos.y, originalPos.z, actor.getYRot(), actor.getXRot());
+                                                                                        actor.setPos(originalPos.x, originalPos.y, originalPos.z);
                                                                                         SoundUtils.playSound(level, actor.position(), BMDSounds.OBSIDILITH_TELEPORT.get(), SoundSource.HOSTILE, 1.0f, 64, null);
                                                                                     },
                                                                                     20,

@@ -5,12 +5,22 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.*;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -22,7 +32,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class VanillaCopiesServer {
     public static DamageSource create(Level level, ResourceKey<DamageType> key, Entity attacker) {
-        Holder<DamageType> damageType = level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key);
+        Holder<DamageType> damageType = level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(key);
         return new DamageSource(damageType, attacker);
     }
 
@@ -114,8 +124,11 @@ public class VanillaCopiesServer {
                     BlockState blockState = entity.level().getBlockState(blockPos);
 
                     if (!blockState.isAir() && blockState.getBlock() == Blocks.FIRE)
-                        if (entity.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && !blockState.is(BlockTags.WITHER_IMMUNE))
-                            bl2 = entity.level().destroyBlock(blockPos, false) || bl2;
+                        if (entity.level() instanceof ServerLevel serverLevel) {
+                            boolean mobGriefing = serverLevel.getGameRules().get(GameRules.MOB_GRIEFING);
+                            if (mobGriefing && !blockState.is(BlockTags.WITHER_IMMUNE))
+                                bl2 = entity.level().destroyBlock(blockPos, false) || bl2;
+                        }
                 }
     }
 

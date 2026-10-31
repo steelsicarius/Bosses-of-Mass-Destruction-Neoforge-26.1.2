@@ -20,6 +20,7 @@ import com.cerbon.cerbons_api.api.general.data.HistoricalData;
 import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.MathUtils;
 import com.cerbon.cerbons_api.api.static_utilities.MobUtils;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
@@ -54,8 +55,6 @@ public class LichEntity extends BaseEntity {
     public LichEntity(EntityType<? extends LichEntity> entityType, Level level, LichConfig mobConfig) {
         super(entityType, level);
         this.mobConfig = mobConfig;
-
-        noCulling = true;
 
         this.animationHolder = new AnimationHolder(this, Map.of(
                 LichActions.endTeleport, new AnimationHolder.Animation("unteleport", "idle"),
@@ -96,7 +95,7 @@ public class LichEntity extends BaseEntity {
                 moveLogic, damageMemory
         );
 
-        bossBar = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.PROGRESS);
+        bossBar = new ServerBossEvent(UUID.randomUUID(), this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.PROGRESS);
         serverTick = new CompositeEntityTick<>(cappedHeal, moveLogic);
         clientTick = lichParticles;
 
@@ -115,9 +114,9 @@ public class LichEntity extends BaseEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         animationHolder.registerControllers(data);
-        data.add(new AnimationController<>(this, "skull_float", 0, AnimationUtils.createIdlePredicate("skull_float")));
-        data.add(new AnimationController<>(this, "float", 0, AnimationUtils.createIdlePredicate("float")));
-        data.add(new AnimationController<>(this, "book_idle", 0, AnimationUtils.createIdlePredicate("book_idle")));
+        data.add(new AnimationController<>("skull_float", 0, AnimationUtils.createIdlePredicate("skull_float")));
+        data.add(new AnimationController<>("float", 0, AnimationUtils.createIdlePredicate("float")));
+        data.add(new AnimationController<>("book_idle", 0, AnimationUtils.createIdlePredicate("book_idle")));
     }
 
     public boolean inLineOfSight(Entity target){
@@ -134,8 +133,7 @@ public class LichEntity extends BaseEntity {
 
     @Override
     public void serverTick(ServerLevel serverLevel) {
-        if (shouldSetToNighttime)
-            serverLevel.setDayTime(LichUtils.timeToNighttime(serverLevel.dayTime()));
+        // TODO: Eternal nighttime feature needs clock manager API update for 26.1.2
     }
 
     @Override
@@ -144,7 +142,7 @@ public class LichEntity extends BaseEntity {
     }
 
     @Override
-    public boolean causeFallDamage(float fallDistance, float multiplier, @NotNull DamageSource source) {
+    public boolean causeFallDamage(double fallDistance, float multiplier, @NotNull DamageSource source) {
         return false;
     }
 
@@ -191,7 +189,7 @@ public class LichEntity extends BaseEntity {
                 )
         );
 
-         level().getEntitiesOfClass(Phantom.class, new AABB(blockPosition()).inflate(100.0, 100.0, 100.0)).forEach(Phantom::kill);
+         level().getEntitiesOfClass(Phantom.class, new AABB(blockPosition()).inflate(100.0, 100.0, 100.0)).forEach(phantom -> phantom.kill((ServerLevel) level()));
 
          super.die(damageSource);
     }

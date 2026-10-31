@@ -62,7 +62,7 @@ public class SpikeWaveAction implements IActionWithCooldown {
         int firstBurstDelay = 20;
         int secondBurstDelay = 45;
         int thirdBurstDelay = 70;
-        ServerLevel level = target.serverLevel();
+        ServerLevel level = target.level();
 
         eventScheduler.addEvent(
                 new EventSeries(

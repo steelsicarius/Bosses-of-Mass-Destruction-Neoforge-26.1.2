@@ -26,6 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class MonolithBlock extends BaseEntityBlock {
     public static final MapCodec<MonolithBlock> CODEC = simpleCodec(MonolithBlock::new);
@@ -49,12 +52,6 @@ public class MonolithBlock extends BaseEntityBlock {
     @Override
     protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.bosses_of_mass_destruction.monolith_block.tooltip_0").withStyle(ChatFormatting.DARK_GRAY));
-        tooltipComponents.add(Component.translatable("item.bosses_of_mass_destruction.monolith_block.tooltip_1").withStyle(ChatFormatting.DARK_GRAY));
     }
 
     @Nullable
@@ -80,17 +77,17 @@ public class MonolithBlock extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState state, Direction direction, @NotNull BlockState newState, @NotNull LevelAccessor level, @NotNull BlockPos pos, @NotNull BlockPos posFrom) {
+    public @NotNull BlockState updateShape(BlockState state, @NotNull LevelReader level, @NotNull ScheduledTickAccess tickAccess, @NotNull BlockPos pos, @NotNull Direction direction, @NotNull BlockPos neighborPos, @NotNull BlockState neighborState, @NotNull RandomSource random) {
         DoubleBlockHalf doubleBlockHalf = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
         BlockState airState = Blocks.AIR.defaultBlockState();
 
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)){
-            if (newState.is(this) && newState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) != doubleBlockHalf)
-                return state.setValue(HorizontalDirectionalBlock.FACING, newState.getValue(HorizontalDirectionalBlock.FACING));
+            if (neighborState.is(this) && neighborState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) != doubleBlockHalf)
+                return state.setValue(HorizontalDirectionalBlock.FACING, neighborState.getValue(HorizontalDirectionalBlock.FACING));
             else
                 return airState;
         } else
-            return super.updateShape(state, direction, newState, level, pos, posFrom);
+            return super.updateShape(state, level, tickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override
@@ -147,12 +144,12 @@ public class MonolithBlock extends BaseEntityBlock {
     }
 
     public static float getExplosionPower(ServerLevel level, BlockPos pos, float power){
-        ChunkPos chunkPos = new ChunkPos(pos);
+        ChunkPos chunkPos = ChunkPos.containing(pos);
         Optional<ChunkBlockCache> blockCache = BMDCapabilities.getChunkBlockCache(level);
 
         if (blockCache.isPresent()) {
-            for (int x = chunkPos.x - 4; x <= chunkPos.x + 4; x++)
-                for (int z = chunkPos.z - 4; z <= chunkPos.z + 4; z++) {
+            for (int x = chunkPos.x() - 4; x <= chunkPos.x() + 4; x++)
+                for (int z = chunkPos.z() - 4; z <= chunkPos.z() + 4; z++) {
                     List<BlockPos> blocks = blockCache.get().getBlocksFromChunk(new ChunkPos(x, z), BMDBlocks.MONOLITH_BLOCK.get());
                     for (BlockPos blockPos : blocks) {
                         if (Math.abs(blockPos.getX() - pos.getX()) < 64 && Math.abs(blockPos.getY() - pos.getY()) < 64 && Math.abs(blockPos.getZ() - pos.getZ()) < 64) {

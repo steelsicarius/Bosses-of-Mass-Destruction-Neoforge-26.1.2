@@ -11,6 +11,7 @@ import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.SoundUtils;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -69,14 +70,14 @@ public class TeleportAction implements IActionWithCooldown {
                 (pos, e) -> eventScheduler.addEvent(
                         new TimedEvent(
                                 () -> {
-                                    SoundUtils.playSound(target.serverLevel(), entity.position(), BMDSounds.TELEPORT_PREPARE.get(), SoundSource.HOSTILE, 3.0f, 64, null);
+                                    SoundUtils.playSound((ServerLevel) target.level(), entity.position(), BMDSounds.TELEPORT_PREPARE.get(), SoundSource.HOSTILE, 3.0f, 64.0, null);
                                     entity.collides = false;
                                     eventScheduler.addEvent(
                                             new TimedEvent(
                                                     () -> {
                                                         e.teleportTo(pos.x, pos.y, pos.z);
                                                         e.level().broadcastEntityEvent(e, LichActions.endTeleport);
-                                                        SoundUtils.playSound(target.serverLevel(), entity.position(), BMDSounds.LICH_TELEPORT.get(), SoundSource.HOSTILE, 2.0f, 64, null);
+                                                        SoundUtils.playSound((ServerLevel) target.level(), entity.position(), BMDSounds.LICH_TELEPORT.get(), SoundSource.HOSTILE, 2.0f, 64.0, null);
                                                         entity.collides = true;
                                                         },
                                                     teleportDelay - teleportStartSoundDelay

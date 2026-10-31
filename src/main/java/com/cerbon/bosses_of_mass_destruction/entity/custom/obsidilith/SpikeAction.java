@@ -10,6 +10,7 @@ import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.static_utilities.CapabilityUtils;
 import com.cerbon.cerbons_api.api.static_utilities.MathUtils;
 import com.cerbon.cerbons_api.api.static_utilities.SoundUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -44,7 +45,7 @@ public class SpikeAction implements IActionWithCooldown {
         int riftTime = 20;
         RiftBurst riftBurst = new RiftBurst(
                 entity,
-                target.serverLevel(),
+                (ServerLevel) target.level(),
                 BMDParticles.OBSIDILITH_SPIKE_INDICATOR.get(),
                 BMDParticles.OBSIDILITH_SPIKE.get(),
                 riftTime,
@@ -52,7 +53,7 @@ public class SpikeAction implements IActionWithCooldown {
                 this::damageEntity
         );
 
-        SoundUtils.playSound(target.serverLevel(), entity.position(), BMDSounds.OBSIDILITH_PREPARE_ATTACK.get(), SoundSource.HOSTILE, 3.0f, 1.2f, 64, null);
+        SoundUtils.playSound((ServerLevel) target.level(), entity.position(), BMDSounds.OBSIDILITH_PREPARE_ATTACK.get(), SoundSource.HOSTILE, 3.0f, 1.2f, 64.0, null);
 
         for(int i = 0; i < 3; i++){
             int timeBetweenRifts = 30;
@@ -62,17 +63,17 @@ public class SpikeAction implements IActionWithCooldown {
                     new TimedEvent(
                             () -> {
                                 Vec3 placement = ObsidilithUtils.approximatePlayerNextPosition(BMDCapabilities.getPlayerPositions(target), target.position());
-                                SoundUtils.playSound(target.serverLevel(), placement, BMDSounds.SPIKE_INDICATOR.get(), SoundSource.HOSTILE, 1.0f, 32, null);
+                                SoundUtils.playSound((ServerLevel) target.level(), placement, BMDSounds.SPIKE_INDICATOR.get(), SoundSource.HOSTILE, 1.0f, 32.0, null);
 
                                 eventScheduler.addEvent(
                                         new TimedEvent(
                                                 () -> SoundUtils.playSound(
-                                                        target.serverLevel(),
+                                                        (ServerLevel) target.level(),
                                                         placement,
                                                         BMDSounds.SPIKE.get(),
                                                         SoundSource.HOSTILE,
                                                         1.2f,
-                                                        32,
+                                                        32.0,
                                                         null
                                                 ),
                                                 riftTime,
@@ -94,7 +95,7 @@ public class SpikeAction implements IActionWithCooldown {
 
     private void damageEntity(LivingEntity entity){
         float damage = (float) this.entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        entity.hurt(BMDUtils.shieldPiercing(entity.level(), this.entity), damage);
-        entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 120, 2));
+        entity.hurtServer((ServerLevel) entity.level(), BMDUtils.shieldPiercing(entity.level(), this.entity), damage);
+        entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 120, 2));
     }
 }

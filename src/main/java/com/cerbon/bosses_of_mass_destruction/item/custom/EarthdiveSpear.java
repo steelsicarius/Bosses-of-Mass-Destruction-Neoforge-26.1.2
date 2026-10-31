@@ -28,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -42,7 +43,6 @@ public class EarthdiveSpear extends Item {
 
     public EarthdiveSpear(Properties properties) {
         super(properties);
-
 
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(
@@ -59,20 +59,19 @@ public class EarthdiveSpear extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.bosses_of_mass_destruction.earthdive_spear.tooltip").withStyle(ChatFormatting.DARK_GRAY));
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.accept(Component.translatable("item.bosses_of_mass_destruction.earthdive_spear.tooltip").withStyle(ChatFormatting.DARK_GRAY));
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, tooltipFlag);
     }
 
     @Override
-    public void releaseUsing(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity user, int timeCharged) {
-        if (user instanceof Player player)
-            if (isCharged(stack, timeCharged))
-                if (!level.isClientSide() && level instanceof ServerLevel serverLevel)
+    public boolean releaseUsing(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity user, int timeCharged) {
+        if (user instanceof Player player) {
+            if (isCharged(stack, timeCharged)) {
+                if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
                     if (new WallTeleport(serverLevel, player).tryTeleport(player.getLookAngle(), player.getEyePosition()) ||
-                        new WallTeleport(serverLevel, player).tryTeleport(player.getLookAngle(), player.getEyePosition().add(0.0, -1.0, 0.0)))
-                    {
-                        stack.hurtAndBreak(1 , player, EquipmentSlot.MAINHAND);
+                        new WallTeleport(serverLevel, player).tryTeleport(player.getLookAngle(), player.getEyePosition().add(0.0, -1.0, 0.0))) {
+                        stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
                         player.awardStat(Stats.ITEM_USED.get(this));
                         serverLevel.playSound(
                                 null,
@@ -83,12 +82,15 @@ public class EarthdiveSpear extends Item {
                                 SoundUtils.randomPitch(player.getRandom())
                         );
                     }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+    public void hurtEnemy(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         stack.hurtAndBreak(1, attacker, EquipmentSlot.MAINHAND);
-        return true;
     }
 
     @Override
@@ -99,7 +101,7 @@ public class EarthdiveSpear extends Item {
             @NotNull BlockPos pos,
             @NotNull LivingEntity miningEntity
     ) {
-        if (state.getDestroySpeed(level, pos) != 0.0){
+        if (state.getDestroySpeed(level, pos) != 0.0) {
             stack.hurtAndBreak(2, miningEntity, EquipmentSlot.MAINHAND);
         }
         return true;
@@ -119,8 +121,8 @@ public class EarthdiveSpear extends Item {
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int remainingUseDuration) {
         super.onUseTick(level, user, stack, remainingUseDuration);
-        if (level instanceof ServerLevel serverLevel){
-            if (isCharged(stack, remainingUseDuration)){
+        if (level instanceof ServerLevel serverLevel) {
+            if (isCharged(stack, remainingUseDuration)) {
                 Consumer<BlockPos> teleportAction = pos -> spawnTeleportParticles(serverLevel, user);
                 WallTeleport wallTeleport = new WallTeleport(serverLevel, user);
                 if (wallTeleport.tryTeleport(user.getLookAngle(), user.getEyePosition(), teleportAction))
@@ -129,19 +131,14 @@ public class EarthdiveSpear extends Item {
         }
     }
 
-    private void spawnTeleportParticles(ServerLevel level, LivingEntity user){
+    private void spawnTeleportParticles(ServerLevel level, LivingEntity user) {
         Vec3 pos = user.getEyePosition().add(user.getLookAngle().multiply(0.15, 0.15, 0.15)).add(RandomUtils.randVec());
         Vec3 vel = user.getEyePosition().add(user.getLookAngle().multiply(4.0, 4.0, 4.0)).subtract(pos);
         ParticleUtils.spawnParticle(level, BMDParticles.EARTHDIVE_INDICATOR.get(), pos, vel, 0, 0.07);
     }
 
-    private boolean isCharged(ItemStack stack, int remainingUseTicks){
+    private boolean isCharged(ItemStack stack, int remainingUseTicks) {
         return 72000 - remainingUseTicks >= 10;
-    }
-
-    @Override
-    public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers() {
-        return attributeModifiers;
     }
 
     @Override
@@ -154,9 +151,4 @@ public class EarthdiveSpear extends Item {
         return ItemUseAnimation.SPEAR;
     }
 
-    @Override
-    public int getEnchantmentValue() {
-        return 1;
-    }
 }
-

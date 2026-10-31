@@ -54,7 +54,7 @@ public class SporeAction implements IActionWithCooldown {
 
         eventScheduler.addEvent(
                 new TimedEvent(
-                        () -> SoundUtils.playSound(((ServerPlayer) target).serverLevel(), entity.position(), BMDSounds.SPORE_PREPARE.get(), SoundSource.HOSTILE, 1.5f, 32, null),
+                        () -> SoundUtils.playSound(((ServerPlayer) target).level(), entity.position(), BMDSounds.SPORE_PREPARE.get(), SoundSource.HOSTILE, 1.5f, 32.0, null),
                         26
                 )
         );
