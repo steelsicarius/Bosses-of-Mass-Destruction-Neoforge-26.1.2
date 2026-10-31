@@ -1,6 +1,6 @@
 package com.cerbon.bosses_of_mass_destruction.packet.custom;
 
-import com.cerbon.bosses_of_mass_destruction.block.custom.VoidLilyBlockEntity;
+import com.cerbon.bosses_of_mass_destruction.client.VoidLilyClient;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import com.cerbon.cerbons_api.api.network.data.Side;
 import com.cerbon.cerbons_api.api.static_utilities.PacketUtils;
@@ -46,7 +46,7 @@ public class SendParticleS2CPacket {
         ClientLevel level = client.level;
         if (level == null) return;
 
-        client.execute(() -> VoidLilyBlockEntity.spawnVoidLilyParticles(level, VecUtils.asVec3(packet.pos), packet.dir));
+        client.execute(() -> VoidLilyClient.spawnVoidLilyParticles(level, VecUtils.asVec3(packet.pos), packet.dir));
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {

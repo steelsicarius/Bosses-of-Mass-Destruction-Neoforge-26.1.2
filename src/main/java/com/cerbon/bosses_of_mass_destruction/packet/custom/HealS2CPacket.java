@@ -1,6 +1,6 @@
 package com.cerbon.bosses_of_mass_destruction.packet.custom;
 
-import com.cerbon.bosses_of_mass_destruction.block.custom.VoidBlossomBlock;
+import com.cerbon.bosses_of_mass_destruction.client.VoidBlossomClient;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import com.cerbon.cerbons_api.api.network.data.Side;
 import com.cerbon.cerbons_api.api.static_utilities.PacketUtils;
@@ -44,7 +44,7 @@ public class HealS2CPacket {
         ClientLevel level = client.level;
         if (level == null) return;
 
-        client.execute(() -> VoidBlossomBlock.handleVoidBlossomHeal(level, packet.source, packet.dest));
+        client.execute(() -> VoidBlossomClient.handleVoidBlossomHeal(level, packet.source, packet.dest));
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {

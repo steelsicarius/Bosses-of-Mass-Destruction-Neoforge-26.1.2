@@ -1,13 +1,16 @@
-package com.cerbon.bosses_of_mass_destruction.item.custom;
+package com.cerbon.bosses_of_mass_destruction.client;
 
 import com.cerbon.bosses_of_mass_destruction.particle.BMDParticles;
 import com.cerbon.bosses_of_mass_destruction.util.Vec3Receiver;
+import com.cerbon.bosses_of_mass_destruction.util.VecId;
 import com.cerbon.cerbons_api.api.general.particle.ClientParticleBuilder;
 import com.cerbon.cerbons_api.api.static_utilities.*;
-import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class BrimstoneNectarItemEffects implements Vec3Receiver {
+/** Client-only effects for the brimstone nectar item. */
+public class BrimstoneNectarEffectsClient implements Vec3Receiver {
+
     private final ClientParticleBuilder horizontalRodParticle = new ClientParticleBuilder(BMDParticles.GROUND_ROD.get())
             .color(f -> MathUtils.lerpVec(f, Vec3Colors.GOLD, Vec3Colors.RUNIC_BROWN))
             .colorVariation(0.25)
@@ -27,7 +30,7 @@ public class BrimstoneNectarItemEffects implements Vec3Receiver {
             .age(40, 50);
 
     @Override
-    public void clientHandler(ClientLevel level, Vec3 vec3) {
+    public void clientHandler(Level level, Vec3 vec3) {
         for (int i = 1; i <= 3; i++)
             spawnHorizontalRods(i, VecUtils.yOffset(vec3, 0.1));
 
@@ -52,5 +55,10 @@ public class BrimstoneNectarItemEffects implements Vec3Receiver {
                     .rotation((float) -MathUtils.directionToYaw(offset) + 90)
                     .build(pos.add(offset), Vec3.ZERO);
         });
+    }
+
+
+    public static void handlePacket(VecId vecId, Level level, Vec3 pos) {
+        new BrimstoneNectarEffectsClient().clientHandler(level, pos);
     }
 }

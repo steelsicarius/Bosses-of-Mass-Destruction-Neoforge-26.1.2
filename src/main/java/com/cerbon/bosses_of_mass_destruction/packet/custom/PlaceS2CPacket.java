@@ -1,6 +1,6 @@
 package com.cerbon.bosses_of_mass_destruction.packet.custom;
 
-import com.cerbon.bosses_of_mass_destruction.block.custom.VoidBlossomBlock;
+import com.cerbon.bosses_of_mass_destruction.client.VoidBlossomClient;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import com.cerbon.cerbons_api.api.network.data.Side;
 import com.cerbon.cerbons_api.api.static_utilities.PacketUtils;
@@ -36,7 +36,7 @@ public class PlaceS2CPacket {
         PlaceS2CPacket packet = ctx.message();
         Minecraft client = Minecraft.getInstance();
 
-        client.execute(() -> VoidBlossomBlock.handleVoidBlossomPlace(client.level, packet.pos));
+        client.execute(() -> VoidBlossomClient.handleVoidBlossomPlace(client.level, packet.pos));
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {

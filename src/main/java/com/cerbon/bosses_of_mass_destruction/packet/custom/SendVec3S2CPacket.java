@@ -1,5 +1,6 @@
 package com.cerbon.bosses_of_mass_destruction.packet.custom;
 
+import com.cerbon.bosses_of_mass_destruction.client.BrimstoneNectarEffectsClient;
 import com.cerbon.bosses_of_mass_destruction.util.VecId;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import com.cerbon.cerbons_api.api.network.data.Side;
@@ -47,7 +48,7 @@ public class SendVec3S2CPacket {
         if (level == null) return;
         if (vecId == null) return;
 
-        client.execute(() -> vecId.effectHandler.get().clientHandler(level, packet.pos));
+        client.execute(() -> BrimstoneNectarEffectsClient.handlePacket(vecId, level, packet.pos));
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {

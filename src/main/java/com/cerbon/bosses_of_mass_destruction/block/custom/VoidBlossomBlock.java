@@ -9,9 +9,6 @@ import com.cerbon.bosses_of_mass_destruction.packet.custom.HealS2CPacket;
 import com.cerbon.cerbons_api.api.general.event.TimedEvent;
 import com.cerbon.cerbons_api.api.network.Dispatcher;
 import com.cerbon.cerbons_api.api.static_utilities.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -37,7 +34,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class VoidBlossomBlock extends Block {
-    private static final int healAnimationDelay = 16;
+    public static final int healAnimationDelay = 16;
     private static final int healDelay = 64;
     private final VoxelShape shape = box(2.0, 0.0, 2.0, 14.0, 3.0, 14.0);
 
@@ -114,57 +111,4 @@ public class VoidBlossomBlock extends Block {
         }
         return super.playerWillDestroy(level, pos, state, player);
     }
-
-    
-    public static void handleVoidBlossomHeal(ClientLevel level, Vec3 source, Vec3 dest){
-        spawnHealParticle(dest, source, level);
-        spawnChargeParticle(source, level);
-    }
-
-    
-    private static void spawnChargeParticle(Vec3 source, ClientLevel level){
-        Vec3 particlePos = source.add(VecUtils.yAxis.scale(0.25));
-        CapabilityUtils.getLevelEventScheduler(level).addEvent(
-                new TimedEvent(
-                        () -> level.addParticle(net.minecraft.core.particles.ParticleTypes.HEART, particlePos.x() + RandomUtils.range(-0.2, 0.2), particlePos.y() + RandomUtils.range(-0.2, 0.2), particlePos.z() + RandomUtils.range(-0.2, 0.2), 0, 0, 0),
-                        32,
-                        32,
-                        () -> false
-                )
-        );
-    }
-
-    
-    private static void spawnHealParticle(Vec3 dest, Vec3 source, ClientLevel level){
-        List<Vec3> particlePositions = new ArrayList<>();
-        int numCirclePoints = healAnimationDelay;
-        List<Vec3> circlePoints = MathUtils.circlePoints(0.5, numCirclePoints, dest.subtract(source).normalize()).stream().toList();
-        MathUtils.lineCallback(source, dest, 32, (pos, i) ->
-                particlePositions.add(pos.add(circlePoints.get(i % numCirclePoints))));
-
-        AtomicInteger i = new AtomicInteger();
-        CapabilityUtils.getLevelEventScheduler(level).addEvent(
-                new TimedEvent(
-                        () -> {
-                            Vec3 pos1 = particlePositions.get(i.get());
-                            Vec3 pos2 = particlePositions.get(i.get() + 1);
-                            level.addParticle(net.minecraft.core.particles.ParticleTypes.HEART, pos1.x(), pos1.y(), pos1.z(), 0, 0, 0);
-                            level.addParticle(net.minecraft.core.particles.ParticleTypes.HEART, pos2.x(), pos2.y(), pos2.z(), 0, 0, 0);
-                            i.addAndGet(2);
-                        },
-                        0,
-                        healAnimationDelay,
-                        () -> false
-                )
-        );
-    }
-
-    public static void handleVoidBlossomPlace(ClientLevel level, Vec3 pos){
-        for (int i = 0; i <= 12; i++){
-            Vec3 spawnPos = pos.add(VecUtils.planeProject(RandomUtils.randVec(), VecUtils.yAxis).normalize().scale(0.5));
-            Vec3 vel = VecUtils.yAxis.scale(RandomUtils.range(0.1, 0.3));
-            level.addParticle(net.minecraft.core.particles.ParticleTypes.FALLING_SPORE_BLOSSOM, spawnPos.x(), spawnPos.y(), spawnPos.z(), vel.x(), vel.y(), vel.z());
-        }
-    }
-
 }

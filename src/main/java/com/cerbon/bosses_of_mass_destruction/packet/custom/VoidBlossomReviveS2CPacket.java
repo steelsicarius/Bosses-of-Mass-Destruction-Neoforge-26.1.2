@@ -1,6 +1,6 @@
 package com.cerbon.bosses_of_mass_destruction.packet.custom;
 
-import com.cerbon.bosses_of_mass_destruction.structure.structure_repair.VoidBlossomStructureRepair;
+import com.cerbon.bosses_of_mass_destruction.client.ReviveParticlesClient;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import com.cerbon.cerbons_api.api.network.data.Side;
 import com.cerbon.cerbons_api.api.static_utilities.PacketUtils;
@@ -40,7 +40,7 @@ public class VoidBlossomReviveS2CPacket {
         ClientLevel level = client.level;
         if (level == null) return;
 
-        client.execute(() -> VoidBlossomStructureRepair.handleVoidBlossomRevivePacket(packet.pos, level));
+        client.execute(() -> ReviveParticlesClient.handleVoidBlossomRevive(packet.pos, level));
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {
