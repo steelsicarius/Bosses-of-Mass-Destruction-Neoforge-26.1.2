@@ -2,6 +2,7 @@ package com.cerbon.bosses_of_mass_destruction.neoforge.event;
 
 import com.cerbon.bosses_of_mass_destruction.block.BMDBlockEntities;
 import com.cerbon.bosses_of_mass_destruction.client.BMDBlockEntitiesClient;
+import com.cerbon.bosses_of_mass_destruction.client.BMDS2CPacketHandlers;
 import com.cerbon.bosses_of_mass_destruction.client.BMDEntitiesClient;
 import com.cerbon.bosses_of_mass_destruction.config.BMDConfig;
 import com.cerbon.bosses_of_mass_destruction.entity.BMDEntities;
@@ -24,6 +25,7 @@ public class BMDClientEventsNeo {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            BMDS2CPacketHandlers.assign();
             BMDItems.initClient();
             BMDEntitiesClient.init();
             BMDBlockEntitiesClient.init();

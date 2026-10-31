@@ -1,10 +1,11 @@
 package com.cerbon.bosses_of_mass_destruction.packet.custom;
 
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
+
+import java.util.function.Consumer;
 import com.cerbon.cerbons_api.api.network.data.Side;
 import com.cerbon.cerbons_api.api.static_utilities.PacketUtils;
 import com.cerbon.cerbons_api.util.Constants;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,7 +17,7 @@ public class SendDeltaMovementS2CPacket {
     public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "send_delta_movement_s2c_packet");
     public static final StreamCodec<FriendlyByteBuf, SendDeltaMovementS2CPacket> STREAM_CODEC = StreamCodec.ofMember(SendDeltaMovementS2CPacket::write, SendDeltaMovementS2CPacket::new);
 
-    private final Vec3 deltaMovement;
+    public final Vec3 deltaMovement;
 
     public SendDeltaMovementS2CPacket(Vec3 deltaMovement) {
         this.deltaMovement = deltaMovement;
@@ -30,16 +31,12 @@ public class SendDeltaMovementS2CPacket {
         PacketUtils.writeVec3(buf, this.deltaMovement);
     }
 
+    public static Consumer<PacketContext<SendDeltaMovementS2CPacket>> clientHandler = ctx -> {};
+
     public static void handle(PacketContext<SendDeltaMovementS2CPacket> ctx) {
         if (ctx.side().equals(Side.SERVER)) return;
 
-        SendDeltaMovementS2CPacket packet = ctx.message();
-
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer localPlayer = client.player;
-        if (localPlayer == null) return;
-
-        client.execute(() -> localPlayer.setDeltaMovement(packet.deltaMovement));
+        clientHandler.accept(ctx);
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {

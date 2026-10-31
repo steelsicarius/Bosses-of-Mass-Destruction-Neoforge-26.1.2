@@ -2,11 +2,11 @@ package com.cerbon.bosses_of_mass_destruction.packet.custom;
 
 import com.cerbon.bosses_of_mass_destruction.client.VoidBlossomClient;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
+
+import java.util.function.Consumer;
 import com.cerbon.cerbons_api.api.network.data.Side;
 import com.cerbon.cerbons_api.api.static_utilities.PacketUtils;
 import com.cerbon.cerbons_api.util.Constants;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -17,8 +17,8 @@ public class HealS2CPacket {
     public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "heal_s2c_packet");
     public static final StreamCodec<FriendlyByteBuf, HealS2CPacket> STREAM_CODEC = StreamCodec.ofMember(HealS2CPacket::write, HealS2CPacket::new);
 
-    private final Vec3 source;
-    private final Vec3 dest;
+    public final Vec3 source;
+    public final Vec3 dest;
 
     public HealS2CPacket(Vec3 source, Vec3 dest) {
         this.source = source;
@@ -35,16 +35,12 @@ public class HealS2CPacket {
         PacketUtils.writeVec3(buf, this.dest);
     }
 
+    public static Consumer<PacketContext<HealS2CPacket>> clientHandler = ctx -> {};
+
     public static void handle(PacketContext<HealS2CPacket> ctx) {
         if (ctx.side().equals(Side.SERVER)) return;
 
-        HealS2CPacket packet = ctx.message();
-
-        Minecraft client = Minecraft.getInstance();
-        ClientLevel level = client.level;
-        if (level == null) return;
-
-        client.execute(() -> VoidBlossomClient.handleVoidBlossomHeal(level, packet.source, packet.dest));
+        clientHandler.accept(ctx);
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {

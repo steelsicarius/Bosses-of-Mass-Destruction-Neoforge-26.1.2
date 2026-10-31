@@ -2,10 +2,10 @@ package com.cerbon.bosses_of_mass_destruction.packet.custom;
 
 import com.cerbon.bosses_of_mass_destruction.entity.custom.void_blossom.VoidBlossomEntity;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
+
+import java.util.function.Consumer;
 import com.cerbon.cerbons_api.api.network.data.Side;
 import com.cerbon.cerbons_api.util.Constants;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -20,8 +20,8 @@ public class SpikeS2CPacket {
     public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "spike_s2c_packet");
     public static final StreamCodec<FriendlyByteBuf, SpikeS2CPacket> STREAM_CODEC = StreamCodec.ofMember(SpikeS2CPacket::write, SpikeS2CPacket::new);
 
-    private final int id;
-    private final List<BlockPos> spikePositions;
+    public final int id;
+    public final List<BlockPos> spikePositions;
 
     public SpikeS2CPacket(int id, List<BlockPos> spikePositions) {
         this.id = id;
@@ -44,20 +44,12 @@ public class SpikeS2CPacket {
         }
     }
 
+    public static Consumer<PacketContext<SpikeS2CPacket>> clientHandler = ctx -> {};
+
     public static void handle(PacketContext<SpikeS2CPacket> ctx) {
         if (ctx.side().equals(Side.SERVER)) return;
 
-        SpikeS2CPacket packet = ctx.message();
-        Minecraft client = Minecraft.getInstance();
-
-        client.execute(() -> {
-            ClientLevel clientLevel = client.level;
-            if (clientLevel == null) return;
-            Entity entity = clientLevel.getEntity(packet.id);
-
-            if (entity instanceof VoidBlossomEntity voidBlossomEntity)
-                packet.spikePositions.forEach(voidBlossomEntity.clientSpikeHandler::addSpike);
-        });
+        clientHandler.accept(ctx);
     }
 
     public static CustomPacketPayload.Type<CustomPacketPayload> type() {
