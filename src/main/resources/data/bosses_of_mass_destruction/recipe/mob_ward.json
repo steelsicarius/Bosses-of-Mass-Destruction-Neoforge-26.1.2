@@ -6,15 +6,9 @@
     "C"
   ],
   "key": {
-    "C": {
-      "item": "minecraft:obsidian"
-    },
-    "A": {
-      "item": "bosses_of_mass_destruction:ancient_anima"
-    },
-    "H": {
-      "item": "bosses_of_mass_destruction:obsidian_heart"
-    }
+    "C": "minecraft:obsidian",
+    "A": "bosses_of_mass_destruction:ancient_anima",
+    "H": "bosses_of_mass_destruction:obsidian_heart"
   },
   "result": {
     "id": "bosses_of_mass_destruction:mob_ward"
