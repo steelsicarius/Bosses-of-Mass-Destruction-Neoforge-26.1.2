@@ -5,12 +5,14 @@ import com.cerbon.bosses_of_mass_destruction.entity.BMDEntities;
 import com.cerbon.bosses_of_mass_destruction.item.BMDCreativeModeTabs;
 import com.cerbon.bosses_of_mass_destruction.item.BMDItems;
 import com.cerbon.bosses_of_mass_destruction.util.BMDConstants;
+import com.cerbon.bosses_of_mass_destruction.util.BMDUtils;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.living.LivingShieldBlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = BMDConstants.MOD_ID)
@@ -33,6 +35,14 @@ public class BMDEventsNeo {
             event.accept(BMDItems.CHARGED_ENDER_PEARL.get());
             event.accept(BMDItems.BRIMSTONE_NECTAR.get());
         }
+    }
+
+    // Replaces the old LivingEntityMixin (isDamageSourceBlocked no longer exists in 26.1.2;
+    // shield blocking is data-driven and exposed through LivingShieldBlockEvent).
+    @SubscribeEvent
+    public static void onShieldBlock(LivingShieldBlockEvent event) {
+        if (event.getDamageSource().is(BMDUtils.SHIELD_PIERCING))
+            event.setBlocked(false);
     }
 
     @SubscribeEvent
