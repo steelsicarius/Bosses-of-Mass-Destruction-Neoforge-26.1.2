@@ -46,14 +46,26 @@ This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 
 - `./gradlew build` produces `build/libs/BOMD-1.3.3.jar` (BUILD SUCCESSFUL)
 - `./gradlew runServer` boots a dedicated server (configure `run/server.properties`
   with `server-port=25599`, `server-ip=0.0.0.0` and `run/eula.txt=eula=true`)
+- `./gradlew runClient` boots the client on ARM dev machines with
+  `LD_LIBRARY_PATH=<dir with libstdc++ >= GLIBCXX_3.4.30>` (LWJGL openal native
+  needs a newer libstdc++ than the system one; a compatible copy lives in
+  `/tmp/stdcxx/extracted/lib`) plus `xvfb-run` on headless machines. Verified:
+  mods load, resource reload completes and the NeoForge client network
+  validation passes.
+- Vanilla mixins of the mod re-ported: EnderEyeUse, Explosion (new
+  `ServerLevel#explode` signature), IceBlock, NaturalSpawner; the shield-piercing
+  behaviour now uses `LivingShieldBlockEvent` instead of a mixin (26.1.2 made
+  shield blocking data-driven), and the custom boss bars use
+  `CustomizeGuiOverlayEvent.BossEventProgress` instead of `BossHealthOverlayMixin`
+  (`drawBar`/`GuiGraphics` were removed; rendering goes through `GuiGraphicsExtractor`).
+- Item model definitions (`assets/bosses_of_mass_destruction/items/*.json`, mandatory
+  since 1.21.4) generated for every item; `earthdive_spear` uses the vanilla
+  `minecraft:using_item` condition, which matches the old `throwing` predicate logic.
 - Remaining work:
   - Client-side testing (renderers were moved but not visually verified; no display in this environment)
   - Particle renderers stubbed out: `PetalBladeParticleRenderer`, `ObsidilithEffectHandler` effects,
     `GauntletEnergyRenderer`/`LaserParticleRenderer` paths pending new particle API usage
-  - Vanilla mixins of the mod are temporarily disabled (`bosses_of_mass_destruction-common.mixins.json`
-    is empty): `EnderEyeUseMixin`, `ExplosionMixin`, `IceBlockMixin`, `LivingEntityMixin`,
-    `NaturalSpawnerMixin`, `BossHealthOverlayMixin` must be re-ported to 26.1.2 targets
-  - `BMDItems.initClient()`: the "throwing" item model property needs the new 26.1.2 item model API
+  - CERBONs API oriented-hitbox debug mixin (Gizmos-based) still pending
   - Food effects removed (FoodProperties.Builder.effect() no longer exists)
 
 ### Note on Parchment Mappings
