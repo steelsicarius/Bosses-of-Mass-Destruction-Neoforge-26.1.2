@@ -27,6 +27,7 @@ sourceSets.main.resources {
 }
 
 repositories {
+    mavenCentral()
     // Add here additional repositories if required by some of the dependencies below.
     maven {
         name = "FabricMaven"
@@ -141,6 +142,14 @@ dependencies {
     // Mixin Extras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixin_extras_version}"))
     implementation("io.github.llamalad7:mixinextras-neoforge:${project.mixin_extras_version}")
+
+    // NeoForge userdev ships x64 LWJGL natives; add aarch64 natives on ARM dev machines
+    // (local jars, not resolved from Maven: the libraries.minecraft.net repository is
+    // exclusive for org.lwjgl and does not host arm64 classifiers)
+    def lwjglOsArch = providers.systemProperty('os.arch').get()
+    if (lwjglOsArch == 'aarch64' || lwjglOsArch == 'arm64') {
+        runtimeOnly fileTree(dir: 'native-libs', include: '*.jar')
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -39,6 +39,7 @@ public class BMDClientEventsNeo {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            initBossBarRenderers();
             BMDS2CPacketHandlers.assign();
             BMDItems.initClient();
             BMDEntitiesClient.init();
@@ -55,6 +56,8 @@ public class BMDClientEventsNeo {
         int y = event.getY();
         GuiGraphicsExtractor graphics = event.getGuiGraphics();
 
+        if (lichBarRenderer == null || voidBlossomBarRenderer == null) return;
+
         boolean handled = lichBarRenderer.renderBossBar(BAR_BACKGROUND_SPRITES, BAR_PROGRESS_SPRITES, graphics, x, y, bossEvent)
                 || voidBlossomBarRenderer.renderBossBar(BAR_BACKGROUND_SPRITES, BAR_PROGRESS_SPRITES, graphics, x, y, bossEvent)
                 || ObsidilithUtils.obsidilithBossBarRenderer.renderBossBar(BAR_BACKGROUND_SPRITES, BAR_PROGRESS_SPRITES, graphics, x, y, bossEvent);
@@ -63,19 +66,24 @@ public class BMDClientEventsNeo {
             event.setCanceled(true);
     }
 
-    private static final NodeBossBarRenderer lichBarRenderer = new NodeBossBarRenderer(
-            BMDEntities.LICH.get().getDescriptionId(),
-            LichUtils.hpPercentRageModes,
-            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/gui/lich_boss_bar_dividers.png"),
-            LichUtils.textureSize
-    );
+    private static NodeBossBarRenderer lichBarRenderer;
+    private static NodeBossBarRenderer voidBlossomBarRenderer;
 
-    private static final NodeBossBarRenderer voidBlossomBarRenderer = new NodeBossBarRenderer(
-            BMDEntities.VOID_BLOSSOM.get().getDescriptionId(),
-            VoidBlossomEntity.hpMilestones,
-            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/gui/void_blossom_boss_bar_dividers.png"),
-            LichUtils.textureSize
-    );
+    private static void initBossBarRenderers() {
+        // must run after entity type registration (FMLClientSetup)
+        lichBarRenderer = new NodeBossBarRenderer(
+                BMDEntities.LICH.get().getDescriptionId(),
+                LichUtils.hpPercentRageModes,
+                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/gui/lich_boss_bar_dividers.png"),
+                LichUtils.textureSize
+        );
+        voidBlossomBarRenderer = new NodeBossBarRenderer(
+                BMDEntities.VOID_BLOSSOM.get().getDescriptionId(),
+                VoidBlossomEntity.hpMilestones,
+                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/gui/void_blossom_boss_bar_dividers.png"),
+                LichUtils.textureSize
+        );
+    }
 
     // Same sprites used by the vanilla BossHealthOverlay (private in 26.1.2)
     private static final Identifier[] BAR_BACKGROUND_SPRITES = new Identifier[]{
