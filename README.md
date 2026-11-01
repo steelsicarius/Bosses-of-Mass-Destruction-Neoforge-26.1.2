@@ -63,9 +63,13 @@ This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 
   `minecraft:using_item` condition, which matches the old `throwing` predicate logic.
 - Remaining work:
   - Client-side testing (renderers were moved but not visually verified; no display in this environment)
-  - Particle renderers stubbed out: `PetalBladeParticleRenderer`, `ObsidilithEffectHandler` effects,
-    `GauntletEnergyRenderer`/`LaserParticleRenderer` paths pending new particle API usage
+  - All particle effects restored (ObsidilithEffectHandler, PetalBladeParticleRenderer,
+    GauntletBlindnessIndicatorParticles, ChargedEnderPearl particles) using the ported
+    ClientParticleBuilder over the new SingleQuadParticle pipeline
   - CERBONs API oriented-hitbox debug mixin (Gizmos-based) still pending
+  - Fix for the reported singleplayer-world crash: CERBONs API
+    MultiplayerGameModeMixin.interactHook now matches the 26.1.2
+    `MultiPlayerGameMode.interact(Player, Entity, EntityHitResult, InteractionHand)` signature
   - Food effects removed (FoodProperties.Builder.effect() no longer exists)
 
 ### Note on Parchment Mappings
