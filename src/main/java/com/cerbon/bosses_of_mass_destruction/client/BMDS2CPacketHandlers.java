@@ -121,7 +121,7 @@ public class BMDS2CPacketHandlers {
         ClientLevel level = client.level;
         if (level == null) return;
 
-        client.execute(() -> ObsidilithEffectHandler.spawnPillarParticles(packet.pos, level, CapabilityUtils.getLevelEventScheduler(level)));
+        client.execute(() -> ObsidilithEffectHandler.spawnPillarParticles(packet.pos, CapabilityUtils.getLevelEventScheduler(level)));
     }
 
     private static void handlePlace(PacketContext<PlaceS2CPacket> ctx) {

@@ -74,6 +74,13 @@ neoForge {
     runs {
         client {
             client()
+            // Optional: auto-join a singleplayer world for headless testing:
+            // ./gradlew runClient -Pquickplay=testworld   (world must exist in run/saves/)
+            // The '=' form is required: jopt-simple does not consume a space-separated
+            // value for optional-argument options.
+            if (project.hasProperty('quickplay')) {
+                programArgument '--quickPlaySingleplayer=' + project.property('quickplay').toString()
+            }
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }

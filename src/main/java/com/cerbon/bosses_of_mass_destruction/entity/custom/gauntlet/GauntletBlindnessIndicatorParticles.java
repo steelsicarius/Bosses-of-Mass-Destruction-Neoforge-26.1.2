@@ -1,8 +1,10 @@
 package com.cerbon.bosses_of_mass_destruction.entity.custom.gauntlet;
 
 import com.cerbon.bosses_of_mass_destruction.entity.util.IEntityEventHandler;
+import com.cerbon.bosses_of_mass_destruction.particle.BMDParticles;
 import com.cerbon.cerbons_api.api.general.event.EventScheduler;
 import com.cerbon.cerbons_api.api.general.event.TimedEvent;
+import com.cerbon.cerbons_api.api.general.particle.ClientParticleBuilder;
 import com.cerbon.cerbons_api.api.static_utilities.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -15,8 +17,15 @@ public class GauntletBlindnessIndicatorParticles implements IEntityEventHandler 
     private final GauntletEntity entity;
     private final EventScheduler eventScheduler;
 
-    // CERBONs API ClientParticleBuilder depends on SimpleParticle which extends
-    // TextureSheetParticle (removed in NeoForge 26.1.2). Particle builders removed.
+    private final ClientParticleBuilder particleBuilder = new ClientParticleBuilder(BMDParticles.EYE_OPEN.get())
+            .brightness(BMDParticles.FULL_BRIGHT)
+            .color(f -> MathUtils.lerpVec(f, Vec3Colors.WHITE, Vec3Colors.LASER_RED));
+
+    private final ClientParticleBuilder gauntletParticleBuilder = new ClientParticleBuilder(BMDParticles.SOUL_FLAME.get())
+            .color(Vec3Colors.DARK_RED)
+            .brightness(BMDParticles.FULL_BRIGHT)
+            .scale(0.25f)
+            .age(20);
 
     public GauntletBlindnessIndicatorParticles(GauntletEntity entity, EventScheduler eventScheduler) {
         this.entity = entity;
@@ -24,11 +33,18 @@ public class GauntletBlindnessIndicatorParticles implements IEntityEventHandler 
     }
 
     public void handlePlayerEffects(List<Player> players){
-        // Stubbed - particle effects pending API migration
+        for (Player player : players)
+            spawnRotatingParticles(player, particleBuilder);
     }
 
-    private void spawnRotatingParticles(Entity player){
-        // Stubbed - particle effects pending API migration
+    private void spawnRotatingParticles(Entity player, ClientParticleBuilder particleBuilder){
+        for (int i = 0; i <= 20; i++){
+            int i1 = i;
+            int startingRotation = new Random().nextInt(360);
+            particleBuilder
+                    .continuousPosition(simpleParticle -> calculatePositions(player, i1, simpleParticle.getAge(), startingRotation))
+                    .build(calculatePositions(player, i1, 0, startingRotation), Vec3.ZERO);
+        }
     }
 
     private Vec3 calculatePositions(Entity player, int i, int age, int startingRotation){
@@ -45,7 +61,11 @@ public class GauntletBlindnessIndicatorParticles implements IEntityEventHandler 
             eventScheduler.addEvent(
                     new TimedEvent(
                             () -> {
-                                // Stubbed - particle effects pending API migration
+                                for (int i = 0; i <= 3; i++){
+                                    Vec3 particlePos = MobUtils.eyePos(entity).add(RandomUtils.randVec().normalize().scale(2.0));
+                                    Vec3 particleVel = RandomUtils.randVec().scale(0.05).add(VecUtils.yAxis.scale(0.05));
+                                    gauntletParticleBuilder.build(particlePos, particleVel);
+                                }
                             },
                             0,
                             10,

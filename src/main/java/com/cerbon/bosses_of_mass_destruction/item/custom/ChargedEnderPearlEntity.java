@@ -3,7 +3,9 @@ package com.cerbon.bosses_of_mass_destruction.item.custom;
 import com.cerbon.bosses_of_mass_destruction.entity.BMDEntities;
 import com.cerbon.bosses_of_mass_destruction.item.BMDItems;
 import com.cerbon.bosses_of_mass_destruction.packet.custom.ChargedEnderPearlS2CPacket;
+import com.cerbon.bosses_of_mass_destruction.particle.BMDParticles;
 import com.cerbon.bosses_of_mass_destruction.sound.BMDSounds;
+import com.cerbon.cerbons_api.api.general.particle.ClientParticleBuilder;
 import com.cerbon.cerbons_api.api.network.Dispatcher;
 import com.cerbon.cerbons_api.api.static_utilities.*;
 import net.minecraft.network.protocol.Packet;
@@ -35,6 +37,16 @@ import java.util.Random;
 public class ChargedEnderPearlEntity extends ThrowableItemProjectile {
     private static final double radius = 3.0;
     private static final double impactHeight = 3.0;
+
+    private static final ClientParticleBuilder enderParticle = new ClientParticleBuilder(BMDParticles.FLUFF.get())
+            .brightness(BMDParticles.FULL_BRIGHT)
+            .color(Vec3Colors.ENDER_PURPLE)
+            .colorVariation(0.25);
+
+    private static final ClientParticleBuilder verticalRodParticle = new ClientParticleBuilder(BMDParticles.ROD.get())
+            .brightness(BMDParticles.FULL_BRIGHT)
+            .color(age -> MathUtils.lerpVec(age, Vec3Colors.LIGHT_ENDER_PEARL, Vec3Colors.DARK_ENDER_PEARL))
+            .colorVariation(0.25);
     // CERBONs API ClientParticleBuilder depends on SimpleParticle which extends
     // TextureSheetParticle (removed in NeoForge 26.1.2). Particle builders removed.
 
@@ -147,9 +159,15 @@ public class ChargedEnderPearlEntity extends ThrowableItemProjectile {
     }
 
     private static void spawnTeleportParticles(Vec3 pos){
-        // CERBONs API ClientParticleBuilder depends on SimpleParticle which extends
-        // TextureSheetParticle (removed in NeoForge 26.1.2). Particle spawning
-        // will need to be re-implemented using the new particle system.
+        for (int i = 0; i <= 10; i++){
+            int startingRotation = new Random().nextInt(360);
+            double randomRadius = RandomUtils.range(2.0, 3.0);
+            double rotationSpeed = RandomUtils.range(3.0, 4.0);
+            int finalI = i;
+            enderParticle
+                    .continuousPosition(particle -> rotateAroundPos(pos, finalI, particle.getAge(), startingRotation, randomRadius, rotationSpeed))
+                    .build(rotateAroundPos(pos, i, 0, startingRotation, randomRadius, rotationSpeed), Vec3.ZERO);
+        }
     }
 
     private static Vec3 rotateAroundPos(
@@ -166,6 +184,15 @@ public class ChargedEnderPearlEntity extends ThrowableItemProjectile {
     }
 
     private static void spawnVerticalRods(Vec3 pos){
-        // Stubbed - particle rendering pending API migration
+        for (int y = 0; y <= (int) impactHeight; y++)
+            spawnVerticalRodRing(y, pos);
+    }
+
+    private static void spawnVerticalRodRing(int y, Vec3 pos){
+        MathUtils.circleCallback(radius, 30 - (y * 3), VecUtils.yAxis,
+                vec3 -> verticalRodParticle.build(
+                        pos.add(vec3).add(VecUtils.yAxis.scale(y + RandomUtils.range(0.0, 1.0))),
+                        VecUtils.yAxis.scale(0.1)
+                ));
     }
 }
