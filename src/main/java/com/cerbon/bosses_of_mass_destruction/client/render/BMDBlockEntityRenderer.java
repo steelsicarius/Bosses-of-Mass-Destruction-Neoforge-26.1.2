@@ -29,6 +29,7 @@ public class BMDBlockEntityRenderer<T extends BlockEntity & GeoAnimatable> exten
 
     @Override
     public void submit(BlockEntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector bufferSource, CameraRenderState camera) {
-        // Stub implementation - full GeckoLib 5.x rendering would go here
+        // The GeckoLib block renderer implements the 26.1.2 submit pipeline itself.
+        super.submit(renderState, poseStack, bufferSource, camera);
     }
 }

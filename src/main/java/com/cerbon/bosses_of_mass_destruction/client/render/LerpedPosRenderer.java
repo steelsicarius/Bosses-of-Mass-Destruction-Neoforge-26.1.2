@@ -1,7 +1,7 @@
 package com.cerbon.bosses_of_mass_destruction.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -21,7 +21,7 @@ public class LerpedPosRenderer<T extends Entity> implements IRenderer<T> {
             float yaw,
             float partialTicks,
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector buffer,
             int light
     ) {
         double x = Mth.lerp(partialTicks, entity.xo, entity.getX());

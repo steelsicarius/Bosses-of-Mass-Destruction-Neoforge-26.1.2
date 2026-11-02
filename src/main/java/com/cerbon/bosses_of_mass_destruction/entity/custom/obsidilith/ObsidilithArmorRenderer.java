@@ -8,7 +8,7 @@ import com.cerbon.cerbons_api.api.static_utilities.Vec3Colors;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -40,7 +40,7 @@ public class ObsidilithArmorRenderer implements IRendererWithModel, IRenderer<Ob
     }
 
     @Override
-    public void render(ObsidilithEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
+    public void render(ObsidilithEntity entity, float yaw, float partialTicks, PoseStack poseStack, SubmitNodeCollector buffer, int light) {
         float renderAge = entity.tickCount + partialTicks;
         float textureOffset = renderAge * new Random().nextFloat();
 
@@ -52,18 +52,8 @@ public class ObsidilithArmorRenderer implements IRendererWithModel, IRenderer<Ob
     }
 
     @Override
-    public void render(BakedGeoModel model, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        VertexConsumer energyBuffer = buffer.getBuffer(type);
-        if(obsidilithEntity == null) return;
-        if (type == null) return;
-
-        if (obsidilithEntity.isShielded()){
-            Vec3 color = getColor().add(VecUtils.unit).normalize().scale(0.6);
-            var colour = ARGB.color(255, (int) ((float) color.x * 255), (int) ((float) color.y * 255), (int) ((float) color.z * 255));
-
-            // Stub - actuallyRender API changed in GeckoLib 5.5.2
-            if (geoModelProvider == null) return;
-        }
+    public void render(BakedGeoModel model, float partialTicks, PoseStack poseStack, SubmitNodeCollector buffer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+        // TODO: energy swirl layer pending a GeckoLib 5.5.2 GeoRenderLayer port
     }
 
     private Vec3 getColor() {

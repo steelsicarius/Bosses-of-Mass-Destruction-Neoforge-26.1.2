@@ -7,7 +7,7 @@ import com.cerbon.cerbons_api.api.static_utilities.RandomUtils;
 import com.cerbon.cerbons_api.api.static_utilities.Vec3Colors;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
@@ -26,7 +26,7 @@ public class PetalBladeParticleRenderer<T extends Entity> implements IRenderer<T
             float yaw,
             float partialTicks,
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector buffer,
             int light
     ) {
         Vec3 prevPos = new Vec3(entity.xo, entity.yo, entity.zo);

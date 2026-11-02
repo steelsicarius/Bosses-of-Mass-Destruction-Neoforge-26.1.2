@@ -7,7 +7,7 @@ import com.cerbon.cerbons_api.api.static_utilities.Vec3Colors;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
@@ -23,7 +23,7 @@ public class VoidBlossomSpikeRenderer implements IRenderer<VoidBlossomEntity> {
     private final RenderType type = RenderTypes.entityCutout(spikeTexture);
 
     @Override
-    public void render(VoidBlossomEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
+    public void render(VoidBlossomEntity entity, float yaw, float partialTicks, PoseStack poseStack, SubmitNodeCollector buffer, int light) {
         for (var kv :  entity.clientSpikeHandler.getSpikes().entrySet()){
             renderBeam(
                     entity,
@@ -36,7 +36,7 @@ public class VoidBlossomSpikeRenderer implements IRenderer<VoidBlossomEntity> {
         }
     }
 
-    private void renderBeam(LivingEntity actor, VoidBlossomClientSpikeHandler.Spike spike, float tickDelta, PoseStack poseStack, MultiBufferSource bufferSource, RenderType type){
+    private void renderBeam(LivingEntity actor, VoidBlossomClientSpikeHandler.Spike spike, float tickDelta, PoseStack poseStack, SubmitNodeCollector bufferSource, RenderType type){
         float numTextures = 8.0f;
         float lifeRatio = 2.0f;
         float textureProgress = Math.max(0f, ((spike.age() + tickDelta) * lifeRatio / spike.maxAge()) - lifeRatio + 1);
@@ -67,20 +67,21 @@ public class VoidBlossomSpikeRenderer implements IRenderer<VoidBlossomEntity> {
         float ak = Mth.sin(q + 1.5707964f) * spikeWidth;
         float al = Mth.cos(q + 4.712389f) * spikeWidth;
         float am = Mth.sin(q + 4.712389f) * spikeWidth;
-        VertexConsumer vertexConsumer= bufferSource.getBuffer(type);
         PoseStack.Pose entry = poseStack.last();
         Matrix4f matrix4f = entry.pose();
+        bufferSource.submitCustomGeometry(poseStack, type, (poseRender, vertexConsumer) -> {
         float c0 = texTransformer.apply(0.4999f);
         float c2 = texTransformer.apply(0.0f);
         float c1 = texTransformer.apply(1.0f);
-        VanillaCopies.vertex(vertexConsumer, matrix4f, entry, af, spikeHeight, ag, red, green, blue, c0, 0.0f);
-        VanillaCopies.vertex(vertexConsumer, matrix4f, entry, af, 0.0f, ag, red, green, blue, c0, 1.0f);
-        VanillaCopies.vertex(vertexConsumer, matrix4f, entry, ah, 0.0f, ai, red, green, blue, c2, 1.0f);
-        VanillaCopies.vertex(vertexConsumer, matrix4f, entry, ah, spikeHeight, ai, red, green, blue, c2, 0.0f);
-        VanillaCopies.vertex(vertexConsumer, matrix4f, entry, aj, spikeHeight, ak, red, green, blue, c1, 0.0f);
-        VanillaCopies.vertex(vertexConsumer, matrix4f, entry, aj, 0.0f, ak, red, green, blue, c1, 1.0f);
-        VanillaCopies.vertex(vertexConsumer, matrix4f, entry, al, 0.0f, am, red, green, blue, c0, 1.0f);
-        VanillaCopies.vertex(vertexConsumer, matrix4f, entry, al, spikeHeight, am, red, green, blue, c0, 0.0f);
+            VanillaCopies.vertex(vertexConsumer, matrix4f, entry, af, spikeHeight, ag, red, green, blue, c0, 0.0f);
+            VanillaCopies.vertex(vertexConsumer, matrix4f, entry, af, 0.0f, ag, red, green, blue, c0, 1.0f);
+            VanillaCopies.vertex(vertexConsumer, matrix4f, entry, ah, 0.0f, ai, red, green, blue, c2, 1.0f);
+            VanillaCopies.vertex(vertexConsumer, matrix4f, entry, ah, spikeHeight, ai, red, green, blue, c2, 0.0f);
+            VanillaCopies.vertex(vertexConsumer, matrix4f, entry, aj, spikeHeight, ak, red, green, blue, c1, 0.0f);
+            VanillaCopies.vertex(vertexConsumer, matrix4f, entry, aj, 0.0f, ak, red, green, blue, c1, 1.0f);
+            VanillaCopies.vertex(vertexConsumer, matrix4f, entry, al, 0.0f, am, red, green, blue, c0, 1.0f);
+                VanillaCopies.vertex(vertexConsumer, matrix4f, entry, al, spikeHeight, am, red, green, blue, c0, 0.0f);
+        });
         poseStack.popPose();
     }
 

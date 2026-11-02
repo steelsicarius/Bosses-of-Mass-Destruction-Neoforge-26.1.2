@@ -4,7 +4,7 @@ import com.cerbon.bosses_of_mass_destruction.projectile.PetalBladeProjectile;
 import com.cerbon.bosses_of_mass_destruction.util.VanillaCopies;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 
@@ -23,7 +23,7 @@ public class PetalBladeRenderer implements IRenderer<PetalBladeProjectile>{
             float yaw,
             float partialTicks,
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector buffer,
             int light
     ) {
         float scale = 0.5f;

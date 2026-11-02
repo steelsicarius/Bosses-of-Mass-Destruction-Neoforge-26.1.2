@@ -4,7 +4,7 @@ import com.cerbon.cerbons_api.api.static_utilities.MathUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -17,7 +17,7 @@ import org.joml.Quaternionf;
 public class VanillaCopies {
     public static void renderBillboard(
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector collector,
             int i,
             EntityRenderDispatcher dispatcher,
             RenderType type,
@@ -29,11 +29,12 @@ public class VanillaCopies {
         poseStack.mulPose(rotation);
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
-        VertexConsumer vertexConsumer = buffer.getBuffer(type);
-        produceVertex(vertexConsumer, matrix4f, pose, i, 0.0f, 0, 0, 1);
-        produceVertex(vertexConsumer, matrix4f, pose, i, 1.0f, 0, 1, 1);
-        produceVertex(vertexConsumer, matrix4f, pose, i, 1.0f, 1, 1, 0);
-        produceVertex(vertexConsumer, matrix4f, pose, i, 0.0f, 1, 0, 0);
+        collector.submitCustomGeometry(poseStack, type, (pose1, vertexConsumer) -> {
+            produceVertex(vertexConsumer, matrix4f, pose1, i, 0.0f, 0, 0, 1);
+            produceVertex(vertexConsumer, matrix4f, pose1, i, 1.0f, 0, 1, 1);
+            produceVertex(vertexConsumer, matrix4f, pose1, i, 1.0f, 1, 1, 0);
+            produceVertex(vertexConsumer, matrix4f, pose1, i, 0.0f, 1, 0, 0);
+        });
         poseStack.popPose();
     }
 
@@ -55,7 +56,7 @@ public class VanillaCopies {
                 .setNormal(normalMatrix, 0.0f, 1.0f, 0.0f);
     }
 
-    public static void renderBeam(LivingEntity actor, Vec3 target, Vec3 prevTarget, float partialTicks, Vec3 color, PoseStack poseStack, MultiBufferSource buffer, RenderType renderType){
+    public static void renderBeam(LivingEntity actor, Vec3 target, Vec3 prevTarget, float partialTicks, Vec3 color, PoseStack poseStack, SubmitNodeCollector collector, RenderType renderType){
         float j = actor.level().getGameTime() + partialTicks;
         float k = j % 1.0F;
         float l = actor.getEyeHeight() - 1.7f; // Subtracted by 1.7 to center the beam at the Gauntlet eye. Not sure why I had to add this. (1.21 addition)
@@ -93,24 +94,24 @@ public class VanillaCopies {
         float am = Mth.sin(q + 4.712389F) * 0.2F;
         float aq = -1.0F - k; // Negated K to reverse direction of laser movement
         float ar = m * 2.5f + aq;
-        VertexConsumer vertexConsumer = buffer.getBuffer(renderType);
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
+        collector.submitCustomGeometry(poseStack, renderType, (poseRender, vertexConsumer) -> {
 
-        vertex(vertexConsumer, matrix4f, pose, af, m, ag, red, green, blue, 0.4999f, ar);
-        vertex(vertexConsumer, matrix4f, pose, af, 0.0f, ag, red, green, blue, 0.4999f, aq);
-        vertex(vertexConsumer, matrix4f, pose, ah, 0.0f, ai, red, green, blue, 0.0f, aq);
-        vertex(vertexConsumer, matrix4f, pose, ah, m, ai, red, green, blue, 0.0f, ar);
-        vertex(vertexConsumer, matrix4f, pose, aj, m, ak, red, green, blue, 0.4999f, ar);
-        vertex(vertexConsumer, matrix4f, pose, aj, 0.0f, ak, red, green, blue, 0.4999f, aq);
-        vertex(vertexConsumer, matrix4f, pose, al, 0.0f, am, red, green, blue, 0.0f, aq);
-        vertex(vertexConsumer, matrix4f, pose, al, m, am, red, green, blue, 0.0f, ar);
+            vertex(vertexConsumer, matrix4f, pose, af, m, ag, red, green, blue, 0.4999f, ar);
+            vertex(vertexConsumer, matrix4f, pose, af, 0.0f, ag, red, green, blue, 0.4999f, aq);
+            vertex(vertexConsumer, matrix4f, pose, ah, 0.0f, ai, red, green, blue, 0.0f, aq);
+            vertex(vertexConsumer, matrix4f, pose, ah, m, ai, red, green, blue, 0.0f, ar);
+            vertex(vertexConsumer, matrix4f, pose, aj, m, ak, red, green, blue, 0.4999f, ar);
+            vertex(vertexConsumer, matrix4f, pose, aj, 0.0f, ak, red, green, blue, 0.4999f, aq);
+            vertex(vertexConsumer, matrix4f, pose, al, 0.0f, am, red, green, blue, 0.0f, aq);
+            vertex(vertexConsumer, matrix4f, pose, al, m, am, red, green, blue, 0.0f, ar);
 
         float as = 0.0F;
         if (actor.tickCount % 2 == 0)
             as = 0.5F;
 
-        vertex(vertexConsumer, matrix4f, pose, x, m, y, red, green, blue, 0.5f, as + 0.5f);
+            vertex(vertexConsumer, matrix4f, pose, x, m, y, red, green, blue, 0.5f, as + 0.5f);
         vertex(
                 vertexConsumer,
                 matrix4f,
@@ -124,8 +125,9 @@ public class VanillaCopies {
                 1.0f,
                 as + 0.5f
             );
-        vertex(vertexConsumer, matrix4f, pose, ad, m, ae, red, green, blue, 1.0f, as);
-        vertex(vertexConsumer, matrix4f, pose, ab, m, ac, red, green, blue, 0.5f, as);
+                vertex(vertexConsumer, matrix4f, pose, ad, m, ae, red, green, blue, 1.0f, as);
+                vertex(vertexConsumer, matrix4f, pose, ab, m, ac, red, green, blue, 0.5f, as);
+        });
         poseStack.popPose();
     }
 

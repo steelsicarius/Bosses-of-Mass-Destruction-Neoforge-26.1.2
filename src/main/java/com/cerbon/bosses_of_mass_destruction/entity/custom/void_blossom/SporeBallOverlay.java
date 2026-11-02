@@ -4,7 +4,7 @@ import com.cerbon.bosses_of_mass_destruction.client.render.IOverlayOverride;
 import com.cerbon.bosses_of_mass_destruction.client.render.IRenderer;
 import com.cerbon.bosses_of_mass_destruction.projectile.SporeBallProjectile;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public class SporeBallOverlay implements IRenderer<SporeBallProjectile>, IOverlayOverride {
@@ -17,7 +17,7 @@ public class SporeBallOverlay implements IRenderer<SporeBallProjectile>, IOverla
             float yaw,
             float partialTicks,
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector buffer,
             int light
     ) {
         this.entity = entity;

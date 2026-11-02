@@ -6,7 +6,7 @@ import com.cerbon.bosses_of_mass_destruction.client.render.IRendererWithModel;
 import com.cerbon.bosses_of_mass_destruction.util.BMDConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -36,7 +36,7 @@ public class GauntletEnergyRenderer implements IRendererWithModel, IRenderer<Gau
     }
 
     @Override
-    public void render(GauntletEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
+    public void render(GauntletEntity entity, float yaw, float partialTicks, PoseStack poseStack, SubmitNodeCollector buffer, int light) {
         float renderAge = entity.tickCount + partialTicks;
         float textureOffset = renderAge * 0.01f;
 
@@ -48,22 +48,10 @@ public class GauntletEnergyRenderer implements IRendererWithModel, IRenderer<Gau
     }
 
     @Override
-    public void render(BakedGeoModel model, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        VertexConsumer energyBuffer = buffer.getBuffer(type);
-        if (gauntletEntity == null) return;
-        if (type == null) return;
-        float renderAlpha = gauntletEntity.energyShieldHandler.getRenderAlpha();
-        if (renderAlpha == 0.0f) return;
-        float lerpedAlpha = Mth.lerp(partialTicks, renderAlpha - 0.1f, renderAlpha);
-        int colour = ARGB.color(
-                (int) (lerpedAlpha * 255),
-                (int) (0.8f * lerpedAlpha * 255),
-                (int) (0.2f * lerpedAlpha * 255),
-                (int) (0.2f * lerpedAlpha * 255)
-        );
-
-        // Stub - actuallyRender API changed in GeckoLib 5.5.2
-        if (geoModelProvider == null) return;
+    public void render(BakedGeoModel model, float partialTicks, PoseStack poseStack, SubmitNodeCollector buffer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+        // TODO: energy swirl layer pending a GeckoLib 5.5.2 GeoRenderLayer port
+        // (the old implementation rendered the model with an energySwirl render type through
+        //  the removed MultiBufferSource pipeline)
     }
 
     private static class RenderHelper extends GeoEntityRenderer<GauntletEntity, EntityRenderState> {

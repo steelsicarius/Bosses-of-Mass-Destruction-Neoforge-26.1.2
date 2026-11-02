@@ -4,7 +4,7 @@ import com.cerbon.bosses_of_mass_destruction.client.render.IBoneLight;
 import com.cerbon.bosses_of_mass_destruction.client.render.IRenderer;
 import com.cerbon.cerbons_api.api.static_utilities.Vec3Colors;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector4f;
 import com.geckolib.cache.model.GeoBone;
@@ -52,7 +52,7 @@ public class ObsidilithBoneLight implements IBoneLight, IRenderer<ObsidilithEnti
             float yaw,
             float partialTicks,
             PoseStack poseStack,
-            MultiBufferSource multiBufferSource,
+            SubmitNodeCollector multiBufferSource,
             int light
     ) {
         this.entity = entity;

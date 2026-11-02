@@ -3,7 +3,7 @@ package com.cerbon.bosses_of_mass_destruction.entity.custom.void_blossom;
 import com.cerbon.bosses_of_mass_destruction.client.render.IRenderer;
 import com.cerbon.bosses_of_mass_destruction.projectile.SporeBallProjectile;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 
 public class SporeBallSizeRenderer implements IRenderer<SporeBallProjectile> {
 
@@ -15,7 +15,7 @@ public class SporeBallSizeRenderer implements IRenderer<SporeBallProjectile> {
             float yaw,
             float partialTicks,
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector buffer,
             int light
     ) {
         float deathProgress = (!entity.impacted || entity.isRemoved()) ? 0f : ((entity.impactedTicks + partialTicks) / SporeBallProjectile.explosionDelay) * 0.5f;

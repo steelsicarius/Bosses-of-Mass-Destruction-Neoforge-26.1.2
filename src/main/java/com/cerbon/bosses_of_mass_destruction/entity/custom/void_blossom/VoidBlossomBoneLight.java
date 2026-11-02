@@ -4,7 +4,7 @@ import com.cerbon.bosses_of_mass_destruction.client.render.IBoneLight;
 import com.cerbon.bosses_of_mass_destruction.client.render.IRenderer;
 import com.cerbon.cerbons_api.api.static_utilities.MathUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import org.joml.Vector4f;
 import com.geckolib.cache.model.GeoBone;
 
@@ -37,7 +37,7 @@ public class VoidBlossomBoneLight implements IBoneLight, IRenderer<VoidBlossomEn
     }
 
     @Override
-    public void render(VoidBlossomEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
+    public void render(VoidBlossomEntity entity, float yaw, float partialTicks, PoseStack poseStack, SubmitNodeCollector buffer, int light) {
         this.entity = entity;
         this.partialTicks = partialTicks;
     }
