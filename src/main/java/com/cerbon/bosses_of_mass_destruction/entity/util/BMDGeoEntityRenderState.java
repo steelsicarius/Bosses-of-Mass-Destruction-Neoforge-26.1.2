@@ -10,15 +10,42 @@ import java.util.Map;
 /**
  * Render state for BOMD GeckoLib entities: combines the vanilla
  * {@link LivingEntityRenderState} with GeckoLib's {@link GeoRenderState} data map.
- * GeckoLib's own EntityRenderStateMixin does this for the vanilla states at runtime,
- * but the compile-time generics of GeoEntityRenderer require the R type argument to
- * implement it, and createRenderState must return it.
+ * <p>
+ * GeckoLib's EntityRenderStateMixin also injects these methods into the vanilla state at
+ * runtime backed by its own {@code geckolib$data} field, so this class overrides every
+ * GeoRenderState method to keep reads and writes on a single consistent map (mixing the
+ * injected field with an overridden getDataMap would silently lose all data).
  */
 public class BMDGeoEntityRenderState extends LivingEntityRenderState implements GeoRenderState {
     private final Map<DataTicket<?>, Object> dataMap = new HashMap<>();
 
     @Override
+    public <D> void addGeckolibData(DataTicket<D> ticket, D data) {
+        this.dataMap.put(ticket, data);
+    }
+
+    @Override
+    public boolean hasGeckolibData(DataTicket<?> ticket) {
+        return this.dataMap.containsKey(ticket);
+    }
+
+    @Override
+    public <D> D getGeckolibData(DataTicket<D> ticket) {
+        return (D) this.dataMap.get(ticket);
+    }
+
+    @Override
     public Map<DataTicket<?>, Object> getDataMap() {
         return this.dataMap;
+    }
+
+    @Override
+    public int getPackedLight() {
+        return this.lightCoords;
+    }
+
+    @Override
+    public float getAnimatableAge() {
+        return this.ageInTicks;
     }
 }
