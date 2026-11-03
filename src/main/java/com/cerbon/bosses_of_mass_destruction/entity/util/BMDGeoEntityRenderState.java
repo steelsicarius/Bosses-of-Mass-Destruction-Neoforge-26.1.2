@@ -9,9 +9,10 @@ import java.util.Map;
 
 /**
  * Render state for BOMD GeckoLib entities: combines the vanilla
- * {@link LivingEntityRenderState} with GeckoLib's {@link GeoRenderState} data map so the
- * entity reference can be carried from extraction to the render passes (26.1.2 render
- * states no longer hold the entity).
+ * {@link LivingEntityRenderState} with GeckoLib's {@link GeoRenderState} data map.
+ * GeckoLib's own EntityRenderStateMixin does this for the vanilla states at runtime,
+ * but the compile-time generics of GeoEntityRenderer require the R type argument to
+ * implement it, and createRenderState must return it.
  */
 public class BMDGeoEntityRenderState extends LivingEntityRenderState implements GeoRenderState {
     private final Map<DataTicket<?>, Object> dataMap = new HashMap<>();

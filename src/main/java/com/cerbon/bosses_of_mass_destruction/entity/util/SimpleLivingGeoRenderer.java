@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import com.geckolib.animatable.GeoAnimatable;
 import com.geckolib.model.GeoModel;
 import com.geckolib.renderer.GeoEntityRenderer;
+import com.geckolib.renderer.base.GeoRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
 
@@ -23,6 +24,9 @@ public class SimpleLivingGeoRenderer<T extends Entity & GeoAnimatable> extends G
     /**
      * 26.1.2 render states no longer hold the entity reference; GeckoLib data tickets are the
      * intended way to carry it from {@link #addRenderData} to the render passes.
+     * createRenderState(T, Void) is overridden to return {@link BMDGeoEntityRenderState}
+     * (GeckoLib's default factory hardcodes a plain LivingEntityRenderState, which does not
+     * implement GeoRenderState at compile time).
      */
     private static final DataTicket<Entity> ENTITY_TICKET = DataTicket.create("bmd_entity", Entity.class);
 
@@ -41,6 +45,11 @@ public class SimpleLivingGeoRenderer<T extends Entity & GeoAnimatable> extends G
         this.renderWithModel = renderWithModel;
         this.overlayOverride = overlayOverride;
         this.deathRotation = deathRotation;
+    }
+
+    @Override
+    public BMDGeoEntityRenderState createRenderState(T entity, Void unused) {
+        return new BMDGeoEntityRenderState();
     }
 
     @Override

@@ -59,9 +59,9 @@ public class BMDEntitiesClient {
             return new SimpleLivingGeoRenderer<>(
                     context,
                     new GeoModel<>(
-                            lichEntity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/lich.geo.json"),
+                            lichEntity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/models/lich.geo.json"),
                             entity -> texture,
-                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/lich.animation.json"),
+                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/animations/lich.animation.json"),
                             new LichCodeAnimations()
                     ),
                     new BoundedLighting<>(5),
@@ -76,9 +76,9 @@ public class BMDEntitiesClient {
         EntityRenderers.register(BMDEntities.OBSIDILITH.get(), context -> {
             ObsidilithBoneLight runeColorHandler = new ObsidilithBoneLight();
             GeoModel<ObsidilithEntity> modelProvider = new GeoModel<>(
-                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/obsidilith.geo.json"),
+                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/models/obsidilith.geo.json"),
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith.png"),
-                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/obsidilith.animation.json"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/animations/obsidilith.animation.json"),
                     (animatable, data, geoModel) -> {}
             );
             ObsidilithArmorRenderer armorRenderer = new ObsidilithArmorRenderer(modelProvider, context);
@@ -98,9 +98,9 @@ public class BMDEntitiesClient {
                 new SimpleLivingGeoRenderer<>(
                         context,
                         new GeoModel<>(
-                                geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/comet.geo.json"),
+                                geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/models/comet.geo.json"),
                                 entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/comet.png"),
-                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/comet.animation.json"),
+                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/animations/comet.animation.json"),
                                 new CometCodeAnimations()
                         ),
                         new FullRenderLight<>(),
@@ -134,9 +134,9 @@ public class BMDEntitiesClient {
 
         EntityRenderers.register(BMDEntities.GAUNTLET.get(), context -> {
             GeoModel<GauntletEntity> modelProvider = new GeoModel<>(
-                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/gauntlet.geo.json"),
+                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/models/gauntlet.geo.json"),
                     new GauntletTextureProvider(),
-                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/gauntlet.animation.json"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/animations/gauntlet.animation.json"),
                     new GauntletCodeAnimations()
             );
             GauntletEnergyRenderer energyRenderer = new GauntletEnergyRenderer(modelProvider, context);
@@ -164,9 +164,9 @@ public class BMDEntitiesClient {
         EntityRenderers.register(BMDEntities.VOID_BLOSSOM.get(), context -> {
             Identifier texture = Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/void_blossom.png");
             GeoModel<VoidBlossomEntity> modelProvider = new GeoModel<>(
-                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/void_blossom.geo.json"),
+                    entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/models/void_blossom.geo.json"),
                     entity -> texture,
-                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/void_blossom.animation.json"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/animations/void_blossom.animation.json"),
                     new VoidBlossomCodeAnimations()
             );
             VoidBlossomBoneLight boneLight = new VoidBlossomBoneLight();
@@ -188,9 +188,9 @@ public class BMDEntitiesClient {
             return new SimpleLivingGeoRenderer<>(
                     context,
                     new GeoModel<>(
-                            geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geo/comet.geo.json"),
+                            geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/models/comet.geo.json"),
                             entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/spore.png"),
-                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "animations/comet.animation.json"),
+                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/animations/comet.animation.json"),
                             new SporeCodeAnimations()),
                     new FullRenderLight<>(),
                     null,
