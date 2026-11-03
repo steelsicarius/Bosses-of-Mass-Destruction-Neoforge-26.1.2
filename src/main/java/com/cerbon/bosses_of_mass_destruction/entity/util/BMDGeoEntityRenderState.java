@@ -45,7 +45,7 @@ public class BMDGeoEntityRenderState extends LivingEntityRenderState implements 
     }
 
     @Override
-    public float getAnimatableAge() {
+    public double getAnimatableAge() {
         return this.ageInTicks;
     }
 }
