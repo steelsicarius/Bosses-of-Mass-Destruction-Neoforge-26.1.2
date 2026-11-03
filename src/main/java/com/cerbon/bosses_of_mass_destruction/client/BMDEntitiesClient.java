@@ -61,7 +61,7 @@ public class BMDEntitiesClient {
                     new GeoModel<>(
                             lichEntity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "lich"),
                             entity -> texture,
-                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "lich.animation"),
+                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "lich"),
                             new LichCodeAnimations()
                     ),
                     new BoundedLighting<>(5),
@@ -78,7 +78,7 @@ public class BMDEntitiesClient {
             GeoModel<ObsidilithEntity> modelProvider = new GeoModel<>(
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "obsidilith"),
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/obsidilith.png"),
-                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "obsidilith.animation"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "obsidilith"),
                     (animatable, data, geoModel) -> {}
             );
             ObsidilithArmorRenderer armorRenderer = new ObsidilithArmorRenderer(modelProvider, context);
@@ -100,7 +100,7 @@ public class BMDEntitiesClient {
                         new GeoModel<>(
                                 geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet"),
                                 entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/comet.png"),
-                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet.animation"),
+                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet"),
                                 new CometCodeAnimations()
                         ),
                         new FullRenderLight<>(),
@@ -136,7 +136,7 @@ public class BMDEntitiesClient {
             GeoModel<GauntletEntity> modelProvider = new GeoModel<>(
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "gauntlet"),
                     new GauntletTextureProvider(),
-                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "gauntlet.animation"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "gauntlet"),
                     new GauntletCodeAnimations()
             );
             GauntletEnergyRenderer energyRenderer = new GauntletEnergyRenderer(modelProvider, context);
@@ -166,7 +166,7 @@ public class BMDEntitiesClient {
             GeoModel<VoidBlossomEntity> modelProvider = new GeoModel<>(
                     entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "void_blossom"),
                     entity -> texture,
-                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "void_blossom.animation"),
+                    Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "void_blossom"),
                     new VoidBlossomCodeAnimations()
             );
             VoidBlossomBoneLight boneLight = new VoidBlossomBoneLight();
@@ -190,7 +190,7 @@ public class BMDEntitiesClient {
                     new GeoModel<>(
                             geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet"),
                             entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/entity/spore.png"),
-                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet.animation"),
+                            Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet"),
                             new SporeCodeAnimations()),
                     new FullRenderLight<>(),
                     null,

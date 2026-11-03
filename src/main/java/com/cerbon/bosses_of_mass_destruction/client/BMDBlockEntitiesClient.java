@@ -27,7 +27,7 @@ public class BMDBlockEntitiesClient {
                         new GeoModel<LevitationBlockEntity>(
                                 entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "levitation_block"),
                                 entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/block/levitation_block.png"),
-                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "levitation_block.animation"),
+                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "levitation_block"),
                                 (animatable, data, geoModel) -> {}
                         ),
                         (bone, packedLight) -> IBoneLight.fullbright
