@@ -25,9 +25,9 @@ public class BMDBlockEntitiesClient {
                 new BMDBlockEntityRenderer<LevitationBlockEntity>(
                         context,
                         new GeoModel<LevitationBlockEntity>(
-                                entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/models/levitation_block.geo.json"),
+                                entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "levitation_block"),
                                 entity -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "textures/block/levitation_block.png"),
-                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "geckolib/animations/levitation_block.animation.json"),
+                                Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "levitation_block.animation"),
                                 (animatable, data, geoModel) -> {}
                         ),
                         (bone, packedLight) -> IBoneLight.fullbright
