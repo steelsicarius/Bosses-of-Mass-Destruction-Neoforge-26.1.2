@@ -7,7 +7,6 @@ import com.geckolib.renderer.base.RenderPassInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -15,19 +14,23 @@ import org.jetbrains.annotations.NotNull;
 import com.geckolib.animatable.GeoAnimatable;
 import com.geckolib.model.GeoModel;
 import com.geckolib.renderer.GeoEntityRenderer;
-import com.geckolib.renderer.base.GeoRenderState;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
 
-@SuppressWarnings("unchecked")
+/**
+ * BOMD's GeckoLib living-entity renderer base.
+ * <p>
+ * 26.1.2 render states no longer hold the entity reference; GeckoLib data tickets are the
+ * intended way to carry it from {@link #addRenderData} to the render passes.
+ * createRenderState(T, Void) is overridden to return {@link BMDGeoEntityRenderState}
+ * (GeckoLib's default factory hardcodes a plain LivingEntityRenderState, which does not
+ * implement GeoRenderState at compile time).
+ * <p>
+ * The GeckoLib entity renderer implements the 26.1.2 submit pipeline itself
+ * ({@code GeoEntityRenderer.submit} -> {@code performRenderPass} -> deferred
+ * {@code submitCustomGeometry}); only hooks are overridden here.
+ */
 public class SimpleLivingGeoRenderer<T extends Entity & GeoAnimatable> extends GeoEntityRenderer<T, BMDGeoEntityRenderState> {
-    /**
-     * 26.1.2 render states no longer hold the entity reference; GeckoLib data tickets are the
-     * intended way to carry it from {@link #addRenderData} to the render passes.
-     * createRenderState(T, Void) is overridden to return {@link BMDGeoEntityRenderState}
-     * (GeckoLib's default factory hardcodes a plain LivingEntityRenderState, which does not
-     * implement GeoRenderState at compile time).
-     */
+
     private static final DataTicket<Entity> ENTITY_TICKET = DataTicket.create("bmd_entity", Entity.class);
 
     private final IRenderLight<T> brightness;
@@ -50,12 +53,6 @@ public class SimpleLivingGeoRenderer<T extends Entity & GeoAnimatable> extends G
     @Override
     public BMDGeoEntityRenderState createRenderState(T entity, Void unused) {
         return new BMDGeoEntityRenderState();
-    }
-
-    @Override
-    public void submit(BMDGeoEntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector bufferSource, CameraRenderState camera) {
-        // The GeckoLib entity renderer implements the 26.1.2 submit pipeline itself.
-        super.submit(renderState, poseStack, bufferSource, camera);
     }
 
     @Override

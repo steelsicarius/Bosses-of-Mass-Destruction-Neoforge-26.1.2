@@ -41,7 +41,7 @@ public class BMDItems {
             new MaterialItem(props("void_thorn").rarity(Rarity.RARE).fireResistant()));
 
     public static final RegistryEntry<Item> CRYSTAL_FRUIT = ITEMS.register("crystal_fruit", () ->
-            new CrystalFruitItem(props("crystal_fruit").rarity(Rarity.RARE).fireResistant().food(BMDFoods.CRYSTAL_FRUIT)));
+            new CrystalFruitItem(props("crystal_fruit").rarity(Rarity.RARE).fireResistant().food(BMDFoods.CRYSTAL_FRUIT, BMDFoods.CRYSTAL_FRUIT_CONSUMABLE)));
 
     public static final RegistryEntry<Item> CHARGED_ENDER_PEARL = ITEMS.register("charged_ender_pearl", () ->
             new ChargedEnderPearlItem(props("charged_ender_pearl").fireResistant().stacksTo(1)));
