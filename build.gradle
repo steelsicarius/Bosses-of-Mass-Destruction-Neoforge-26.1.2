@@ -81,14 +81,27 @@ neoForge {
             if (project.hasProperty('quickplay')) {
                 programArgument '--quickPlayMultiplayer=' + project.property('quickplay').toString()
             }
+            // TEMPORARY (bmd-render-debug): singleplayer quickplay for automated tests
+            if (project.hasProperty('quickplayWorld')) {
+                programArgument '--quickPlaySingleplayer=' + project.property('quickplayWorld').toString()
+            }
+            // Optional: separate game dir so client and server logs don't clobber each other:
+            // ./gradlew runClient -PclientGameDir=run-client
+            if (project.hasProperty('clientGameDir')) {
+                gameDirectory = file(project.property('clientGameDir').toString())
+            }
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // TEMPORARY (bmd-render-debug): enable via -PbmdRenderTest=true
+            systemProperty "bmd.renderTest", (project.findProperty("bmdRenderTest") ?: "false")
         }
 
         server {
             server()
             programArgument '--nogui'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // TEMPORARY (bmd-render-debug): enable via -PbmdRenderTest=true
+            systemProperty "bmd.renderTest", (project.findProperty("bmdRenderTest") ?: "false")
         }
 
         // This run config launches GameTestServer and runs all registered gametests, then exits.

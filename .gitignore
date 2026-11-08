@@ -40,3 +40,7 @@ repo/
 !**/src/**/repo/
 native-libs/
 *.jar
+
+### Local game dirs (dev-run instances) ###
+run-client/
+run-client-test/
