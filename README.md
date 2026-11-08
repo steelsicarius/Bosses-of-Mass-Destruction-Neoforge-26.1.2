@@ -52,6 +52,15 @@ This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 
   `/tmp/stdcxx/extracted/lib`) plus `xvfb-run` on headless machines. Verified:
   mods load, resource reload completes and the NeoForge client network
   validation passes.
+- Automated headless render test (opt-in, off by default): `BMDRenderTestNeo`
+  spawns frozen copies of the four bosses in front of the player ~3s after login
+  (integrated or dedicated server) and the client saves framebuffer screenshots
+  to `<gameDir>/screenshots/bmd_dbg_N.png` (4 shots, ~7s apart). Run it with:
+  `xvfb-run -a -s "-screen 0 1280x800x24" env LD_LIBRARY_PATH=/tmp/stdcxx/extracted/lib \
+     JAVA_HOME=/usr/java/jdk-25-oracle-aarch64 ./gradlew runClient \
+     -PquickplayWorld=testworld -PclientGameDir=run-client-test -PbmdRenderTest=true`
+  Requires `testworld` under `<gameDir>/saves/`; enabled by the
+  `-Dbmd.renderTest=true` system property (wired through `-PbmdRenderTest=true`).
 - Vanilla mixins of the mod re-ported: EnderEyeUse, Explosion (new
   `ServerLevel#explode` signature), IceBlock, NaturalSpawner; the shield-piercing
   behaviour now uses `LivingShieldBlockEvent` instead of a mixin (26.1.2 made
@@ -61,16 +70,27 @@ This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 
 - Item model definitions (`assets/bosses_of_mass_destruction/items/*.json`, mandatory
   since 1.21.4) generated for every item; `earthdive_spear` uses the vanilla
   `minecraft:using_item` condition, which matches the old `throwing` predicate logic.
+- All four GeckoLib boss models verified rendering in-game (Lich, Obsidilith, Gauntlet, Void
+  Blossom) with the automated headless render test (2026-11-08); the earlier "bosses invisible"
+  reports predate the 2026-11-03 render-pipeline and asset-ID fixes. The full GeckoLib chain
+  was also traced statically (extract -> addRenderData -> submit -> performRenderPass ->
+  deferred submitCustomGeometry -> CustomFeatureRenderer draw) and runs correctly.
+- All particle effects restored (ObsidilithEffectHandler, PetalBladeParticleRenderer,
+  GauntletBlindnessIndicatorParticles, ChargedEnderPearl particles) using the ported
+  ClientParticleBuilder over the new SingleQuadParticle pipeline
+- CERBONs API oriented-hitbox debug mixin re-implemented with Gizmos
+  (EntityHitboxDebugRendererMixin, in ../CERBONs-API-master-26.1.2)
+- Singleplayer-world crash fixed in CERBONs API: MultiplayerGameModeMixin.interactHook now
+  matches the 26.1.2
+  `MultiPlayerGameMode.interact(Player, Entity, EntityHitResult, InteractionHand)` signature
+- Food effects restored via the 26.1.2 consumable data component (FoodProperties.Builder.effect()
+  no longer exists): crystal fruit applies Regeneration II (15s), Instant Health and
+  Resistance I (30s) on eat, via `Consumables.defaultFood().onConsume(ApplyStatusEffectsConsumeEffect)`
+  passed to `Item.Properties.food(FoodProperties, Consumable)`
+
 - Remaining work:
-  - Client-side testing (renderers were moved but not visually verified; no display in this environment)
-  - All particle effects restored (ObsidilithEffectHandler, PetalBladeParticleRenderer,
-    GauntletBlindnessIndicatorParticles, ChargedEnderPearl particles) using the ported
-    ClientParticleBuilder over the new SingleQuadParticle pipeline
-  - CERBONs API oriented-hitbox debug mixin (Gizmos-based) still pending
-  - Fix for the reported singleplayer-world crash: CERBONs API
-    MultiplayerGameModeMixin.interactHook now matches the 26.1.2
-    `MultiPlayerGameMode.interact(Player, Entity, EntityHitResult, InteractionHand)` signature
-  - Food effects removed (FoodProperties.Builder.effect() no longer exists)
+  - Manual play-testing of boss fights (AI, attacks, loot): the automated harness verifies
+    rendering, not combat behaviour
 
 ### Note on Parchment Mappings
 
