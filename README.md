@@ -87,6 +87,15 @@ This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 
   no longer exists): crystal fruit applies Regeneration II (15s), Instant Health and
   Resistance I (30s) on eat, via `Consumables.defaultFood().onConsume(ApplyStatusEffectsConsumeEffect)`
   passed to `Item.Properties.food(FoodProperties, Consumable)`
+- Crash fixed: rendering the non-living GeckoLib entities `comet` (Night Lich attack,
+  summonable) and `spore_ball` (Void Blossom attack, summonable) threw
+  `ClassCastException ... cannot be cast to LivingEntity` inside GeckoLib 5.5.2's
+  `GeoEntityRenderer.extractRenderState` (that cast runs whenever the render state is a
+  `LivingEntityRenderState`). Fix: new non-living renderer base `SimpleGeoRenderer` +
+  `BMDGeoProjectileRenderState` (`EntityRenderState` + `GeoRenderState`), now used by the
+  COMET and SPORE_BALL registrations; the four bosses keep `SimpleLivingGeoRenderer`
+  untouched. The opt-in render-test harness (`-Dbmd.renderTest=true`) now also tosses
+  comet + spore_ball so screenshots cover them. See PORTING.md for the full analysis.
 
 - Remaining work:
   - Manual play-testing of boss fights (AI, attacks, loot): the automated harness verifies

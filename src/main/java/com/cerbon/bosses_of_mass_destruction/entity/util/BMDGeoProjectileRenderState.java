@@ -39,7 +39,7 @@ public class BMDGeoProjectileRenderState extends EntityRenderState implements Ge
     }
 
     @Override
-    public <D> D getGeckolibData(DataTicket<?> ticket) {
+    public <D> D getGeckolibData(DataTicket<D> ticket) {
         return (D) this.dataMap.get(ticket);
     }
 
