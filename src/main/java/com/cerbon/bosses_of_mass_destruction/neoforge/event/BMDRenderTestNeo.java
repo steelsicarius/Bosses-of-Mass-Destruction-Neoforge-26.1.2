@@ -13,6 +13,7 @@ import net.minecraft.client.Screenshot;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -34,11 +35,18 @@ public final class BMDRenderTestNeo {
     private static int serverCountdown = -1;
     private static ServerPlayer pendingPlayer;
 
+    // TEMPORARY (bmd-render-debug): periodic projectile tosses so comet/spore_ball are
+    // airborne during every screenshot (they discard on ground impact)
+    private static int projectileCountdown = -1;
+    private static ServerPlayer projectilePlayer;
+
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!ENABLED || !(event.getEntity() instanceof ServerPlayer player)) return;
         serverCountdown = 60; // spawn ~3s after login
         pendingPlayer = player;
+        projectilePlayer = player;
+        projectileCountdown = 60;
     }
 
     @SubscribeEvent
@@ -49,6 +57,19 @@ public final class BMDRenderTestNeo {
             pendingPlayer = null;
             serverCountdown = -1;
             if (player != null && player.isAlive()) spawnBosses(player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onServerTickPostProjectiles(ServerTickEvent.Post event) {
+        if (!ENABLED || projectileCountdown < 0 || projectilePlayer == null) return;
+        if (--projectileCountdown == 0) {
+            if (!projectilePlayer.isAlive() || projectilePlayer.isRemoved()) {
+                projectileCountdown = -1;
+                return;
+            }
+            spawnProjectiles(projectilePlayer);
+            projectileCountdown = 25; // re-toss every 1.25s
         }
     }
 
@@ -76,6 +97,27 @@ public final class BMDRenderTestNeo {
         mob.setPersistenceRequired();
         level.addFreshEntity(mob);
         LOG.info("[BMD-TEST] spawned {} at {}", BuiltInRegistries.ENTITY_TYPE.getKey(type), pos);
+    }
+
+    private static void spawnProjectiles(ServerPlayer player) {
+        ServerLevel level = player.level();
+        Vec3 fwd = Vec3.directionFromRotation(0.0F, player.getYRot());
+        Vec3 base = player.position().add(fwd.scale(4.0)).add(0, 2.5, 0);
+        // Tossed upward so they stay airborne ~2s; re-tossed every 25 ticks
+        toss(level, BMDEntities.COMET.get(), base.add(fwd.scale(-1.0)));
+        toss(level, BMDEntities.SPORE_BALL.get(), base.add(fwd.scale(1.0)));
+    }
+
+    private static void toss(ServerLevel level, EntityType<? extends Entity> type, Vec3 pos) {
+        Entity entity = type.create(level, EntitySpawnReason.COMMAND);
+        if (entity == null) {
+            LOG.error("[BMD-TEST] failed to create {}", BuiltInRegistries.ENTITY_TYPE.getKey(type));
+            return;
+        }
+        entity.snapTo(pos.x, pos.y, pos.z, 0.0F, 0.0F);
+        entity.setDeltaMovement(new Vec3(0.0, 0.45, 0.0));
+        level.addFreshEntity(entity);
+        LOG.info("[BMD-TEST] tossed {} at {}", BuiltInRegistries.ENTITY_TYPE.getKey(type), pos);
     }
 
     // ---------------- CLIENT ----------------
