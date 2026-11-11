@@ -14,6 +14,16 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
+// TEMPORARY (bmd-dev-env): keep the pre-generated MC artifacts instead of re-running the
+// full NFRT decompile+recompile pipeline (which takes ~40 min on low-memory machines).
+// The patched jar in build/moddev/artifacts has been given the manifest attribute
+// 'Minecraft-Dists: CLIENT SERVER' required by FML 11.0.15+ in dev environments.
+// Remove this block (and re-run createMinecraftArtifacts) when changing neo_version.
+tasks.matching { it.name == 'createMinecraftArtifacts' }.configureEach {
+    outputs.upToDateWhen { true }
+    onlyIf { false }
+}
+
 version = mod_version
 group = maven_group
 

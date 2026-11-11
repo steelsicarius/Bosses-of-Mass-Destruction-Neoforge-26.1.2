@@ -87,19 +87,46 @@ This mod has been ported from NeoForge 1.21 (Forge-era code) to NeoForge 26.1.2 
   no longer exists): crystal fruit applies Regeneration II (15s), Instant Health and
   Resistance I (30s) on eat, via `Consumables.defaultFood().onConsume(ApplyStatusEffectsConsumeEffect)`
   passed to `Item.Properties.food(FoodProperties, Consumable)`
-- Crash fixed: rendering the non-living GeckoLib entities `comet` (Night Lich attack,
-  summonable) and `spore_ball` (Void Blossom attack, summonable) threw
-  `ClassCastException ... cannot be cast to LivingEntity` inside GeckoLib 5.5.2's
-  `GeoEntityRenderer.extractRenderState` (that cast runs whenever the render state is a
-  `LivingEntityRenderState`). Fix: new non-living renderer base `SimpleGeoRenderer` +
-  `BMDGeoProjectileRenderState` (`EntityRenderState` + `GeoRenderState`), now used by the
-  COMET and SPORE_BALL registrations; the four bosses keep `SimpleLivingGeoRenderer`
-  untouched. The opt-in render-test harness (`-Dbmd.renderTest=true`) now also tosses
-  comet + spore_ball so screenshots cover them. See PORTING.md for the full analysis.
+- Custom particle providers registered (2026-11-10): the 29 custom particles now have client
+  providers again (ported from 1.21.1 into `registerParticleProviders`, same
+  `SimpleParticle`/`ClientParticleBuilder` API via the ported CERBONs API jar). Previously the
+  empty provider registration made the client silently drop every spawned particle (sounds
+  played, nothing was visible).
+- Custom boss bars fixed and verified in-game (2026-11-11): rendering now goes through
+  `CustomizeGuiOverlayEvent.BossEventProgress` in `BMDClientEventsNeo` (`drawBar`/`GuiGraphics`
+  were removed in 26.1.2; the vanilla chain is `BossHealthOverlay.extractRenderState` ->
+  `ClientHooks.onCustomizeBossEventProgress`). Lich, Obsidilith and Void Blossom show their
+  custom textured bars with node dividers; the temporary `[BMD-BOSSBAR]` diagnostics were
+  removed after the fix was confirmed.
+- GeckoLib 5.5.2 projectile-renderer crash fixed (2026-11-11): BOMD projectiles are
+  `Entity` but not `LivingEntity` (correct design), while GeckoLib 5.5.2's
+  `GeoEntityRenderer.extractRenderState` unconditionally reads living-only state and
+  crashed on them. Fix on the BOMD side, without patching GeckoLib:
+  `BMDGeoEntityRenderState` extends `LivingEntityRenderState` and implements
+  `GeoRenderState` (all data-map methods overridden to a single consistent map),
+  `SimpleLivingGeoRenderer<T extends Entity & GeoAnimatable>` overrides
+  `createRenderState`/`addRenderData`/`postRenderPass` to carry the entity via a
+  GeckoLib `DataTicket`, and non-modelled projectiles use vanilla renderers
+  (`ThrownItemRenderer` for soul star and charged ender pearl, `SimpleEntityRenderer`
+  billboard pipeline for the magic missile). Comet, soul star, magic missiles and
+  spore balls spawn/attack without crashing and render with their trails/particles.
+- Particle visual parity with 1.21.1 confirmed in-game (2026-11-11): the ported CERBONs
+  API `SimpleParticle` (now a `SingleQuadParticle`) applies the mod's scale overrides with
+  the same multiplicative `Particle.scale(float)` semantics as 1.21.1, so ability
+  particles (obsidilith burst/wave, spore, comet trail, soul flame, pollen, etc.) render
+  at the original size; mod-side `ParticleFactories` and the 29 provider definitions are
+  byte-for-byte identical to the 1.21.1 sources.
+- Dev-environment note (FML 11.0.15+): the patched MC jar in `build/moddev/artifacts/` needs the
+  manifest attribute `Minecraft-Dists: client server` (lowercase), otherwise FML aborts with
+  "NeoForge dev environment Minecraft jar does not have a Minecraft-Dists attribute". The
+  attribute was added to the pre-generated artifact and `build.gradle` skips
+  `createMinecraftArtifacts` (`onlyIf { false }`) so the low-memory dev box does not re-run the
+  ~40 min NFRT pipeline. Remove that block when bumping `neo_version`.
 
-- Remaining work:
+- Remaining work (post-port polish, none blocking):
   - Manual play-testing of boss fights (AI, attacks, loot): the automated harness verifies
     rendering, not combat behaviour
+  - Long multiplayer sessions to confirm stability under real network conditions
 
 ### Note on Parchment Mappings
 

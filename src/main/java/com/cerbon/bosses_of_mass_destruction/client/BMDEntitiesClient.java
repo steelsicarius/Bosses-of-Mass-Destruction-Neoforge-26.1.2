@@ -9,7 +9,6 @@ import com.cerbon.bosses_of_mass_destruction.entity.custom.obsidilith.Obsidilith
 import com.cerbon.bosses_of_mass_destruction.entity.custom.obsidilith.ObsidilithBoneLight;
 import com.cerbon.bosses_of_mass_destruction.entity.custom.obsidilith.ObsidilithEntity;
 import com.cerbon.bosses_of_mass_destruction.entity.custom.void_blossom.*;
-import com.cerbon.bosses_of_mass_destruction.entity.util.SimpleGeoRenderer;
 import com.cerbon.bosses_of_mass_destruction.entity.util.SimpleLivingGeoRenderer;
 import com.cerbon.bosses_of_mass_destruction.item.custom.ChargedEnderPearlEntity;
 import com.cerbon.bosses_of_mass_destruction.item.custom.SoulStarEntity;
@@ -95,10 +94,8 @@ public class BMDEntitiesClient {
             );
         });
 
-        // Non-living entity: must use SimpleGeoRenderer (EntityRenderState-based); a
-        // LivingEntityRenderState-based state crashes in GeoEntityRenderer.extractRenderState
         EntityRenderers.register(BMDEntities.COMET.get(), context ->
-                new SimpleGeoRenderer<>(
+                new SimpleLivingGeoRenderer<>(
                         context,
                         new GeoModel<>(
                                 geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet"),
@@ -186,11 +183,9 @@ public class BMDEntitiesClient {
             );
         });
 
-        // Non-living entity: must use SimpleGeoRenderer (EntityRenderState-based); a
-        // LivingEntityRenderState-based state crashes in GeoEntityRenderer.extractRenderState
         EntityRenderers.register(BMDEntities.SPORE_BALL.get(), context -> {
             SporeBallOverlay explosionFlasher = new SporeBallOverlay();
-            return new SimpleGeoRenderer<>(
+            return new SimpleLivingGeoRenderer<>(
                     context,
                     new GeoModel<>(
                             geoAnimatable -> Identifier.fromNamespaceAndPath(BMDConstants.MOD_ID, "comet"),

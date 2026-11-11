@@ -92,6 +92,44 @@ public abstract class BaseEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
+    protected void customServerAiStep(@NotNull ServerLevel level) {
+        super.customServerAiStep(level);
+        if (bossBar != null)
+            bossBar.setProgress(this.getHealth() / this.getMaxHealth());
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        if (hasCustomName() && bossBar != null)
+            bossBar.setName(this.getDisplayName());
+
+        if (nbtHandler != null)
+            nbtHandler.fromTag(input);
+    }
+
+    @Override
+    public void setCustomName(@Nullable Component name) {
+        super.setCustomName(name);
+        if (bossBar != null)
+            bossBar.setName(this.getDisplayName());
+    }
+
+    @Override
+    public void startSeenByPlayer(@NotNull ServerPlayer serverPlayer) {
+        super.startSeenByPlayer(serverPlayer);
+        if (bossBar != null)
+            bossBar.addPlayer(serverPlayer);
+    }
+
+    @Override
+    public void stopSeenByPlayer(@NotNull ServerPlayer serverPlayer) {
+        super.stopSeenByPlayer(serverPlayer);
+        if (bossBar != null)
+            bossBar.removePlayer(serverPlayer);
+    }
+
+    @Override
     public void handleEntityEvent(byte id) {
         if (entityEventHandler != null)
             entityEventHandler.handleEntityEvent(id);
